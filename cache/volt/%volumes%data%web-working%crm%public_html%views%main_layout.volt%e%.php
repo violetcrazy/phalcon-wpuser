@@ -1,4 +1,4 @@
-a:3:{i:0;s:21278:"<!DOCTYPE html>
+a:3:{i:0;s:11632:"<!DOCTYPE html>
 <html>
 
 <head>
@@ -44,8 +44,8 @@ a:3:{i:0;s:21278:"<!DOCTYPE html>
 				<div class="m-stack__item m-brand  m-brand--skin-dark ">
 					<div class="m-stack m-stack--ver m-stack--general">
 						<div class="m-stack__item m-stack__item--middle m-brand__logo">
-							<a href="index.html" class="m-brand__logo-wrapper">
-								<img alt="" src="assets/demo/default/media/img/logo/logo_default_dark.png" />
+							<a href="<?= $this->url->get() ?>" class="m-brand__logo-wrapper">
+								<img alt="" src="<?= $this->url->get() ?>assets/demo/default/media/img/logo/logo_default_dark.png" />
 							</a>
 						</div>
 						<div class="m-stack__item m-stack__item--middle m-brand__tools">
@@ -85,64 +85,62 @@ a:3:{i:0;s:21278:"<!DOCTYPE html>
 						<div class="m-stack__item m-topbar__nav-wrapper">
 							<ul class="m-topbar__nav m-nav m-nav--inline">
 
-								<li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light"
-									data-dropdown-toggle="click">
-									<a href="#" class="m-nav__link m-dropdown__toggle">
-                                            <span class="m-topbar__userpic">
-                                                <img src="assets/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless m--img-centered" alt="" />
-                                            </span>
-										<span class="m-topbar__username m--hide">
-                                                Nick
-                                            </span>
-									</a>
-									<div class="m-dropdown__wrapper">
-										<span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
-										<div class="m-dropdown__inner">
-											<div class="m-dropdown__header m--align-center" style="background: url(assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
-												<div class="m-card-user m-card-user--skin-dark">
-													<div class="m-card-user__pic">
-														<img src="assets/app/media/img/users/user4.jpg" class="m--img-rounded m--marginless" alt="" />
-													</div>
-													<div class="m-card-user__details">
+    <li class="m-nav__item m-topbar__user-profile m-topbar__user-profile--img  m-dropdown m-dropdown--medium m-dropdown--arrow m-dropdown--header-bg-fill m-dropdown--align-right m-dropdown--mobile-full-width m-dropdown--skin-light"
+        data-dropdown-toggle="click">
+        <a href="#" class="m-nav__link m-dropdown__toggle">
+										<span class="m-topbar__userpic">
+											<img src="<?= $userCurrent->getAvatar() ?>" class="m--img-rounded m--marginless m--img-centered" alt="" />
+										</span>
+            <span class="m-topbar__username m--hide">
+											<?= $userCurrent->getName() ?>
+										</span>
+        </a>
+        <div class="m-dropdown__wrapper">
+            <span class="m-dropdown__arrow m-dropdown__arrow--right m-dropdown__arrow--adjust"></span>
+            <div class="m-dropdown__inner">
+                <div class="m-dropdown__header m--align-center" style="background: url(assets/app/media/img/misc/user_profile_bg.jpg); background-size: cover;">
+                    <div class="m-card-user m-card-user--skin-dark">
+                        <div class="m-card-user__pic">
+                            <img src="<?= $userCurrent->getAvatar() ?>" class="m--img-rounded m--marginless" alt="" />
+                        </div>
+                        <div class="m-card-user__details">
                                                             <span class="m-card-user__name m--font-weight-500">
-                                                                Mark Andre
+                                                                <?= $userCurrent->getName() ?>
                                                             </span>
-														<a href="" class="m-card-user__email m--font-weight-300 m-link">
-															mark.andre@gmail.com
-														</a>
-													</div>
-												</div>
-											</div>
-											<div class="m-dropdown__body">
-												<div class="m-dropdown__content">
-													<ul class="m-nav m-nav--skin-light">
-														<li class="m-nav__section m--hide">
-                                                                <span class="m-nav__section-text">
-                                                                    Section
-                                                                </span>
-														</li>
+                            <a href="" class="m-card-user__email m--font-weight-300 m-link">
+                                <?= $userCurrent->user_email ?>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                <div class="m-dropdown__body">
+                    <div class="m-dropdown__content">
+                        <ul class="m-nav m-nav--skin-light">
+                            <li class="m-nav__section m--hide"><span class="m-nav__section-text">Section</span></li>
 
-														<li class="m-nav__item">
-															<a href="header/profile.html" class="m-nav__link">
-																<i class="m-nav__link-icon flaticon-share"></i>
-																<span class="m-nav__link-text">
-                                                                        Activity
-                                                                    </span>
-															</a>
-														</li>
-														<li class="m-nav__separator m-nav__separator--fit"></li>
-														<li class="m-nav__item">
-															<a href="<?= $this->url->get(['for' => 'auth_logout']) ?>" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
-																Thoát
-															</a>
-														</li>
-													</ul>
-												</div>
-											</div>
-										</div>
-									</div>
-								</li>
-							</ul>
+                            <li class="m-nav__item">
+                                <a href="#" class="m-nav__link">
+                                    <i class="m-nav__link-icon flaticon-share"></i>
+                                    <span class="m-nav__link-text">
+																	Chỉnh sửa thông tin
+																</span>
+                                </a>
+                            </li>
+
+                            <li class="m-nav__separator m-nav__separator--fit"></li>
+
+                            <li class="m-nav__item">
+                                <a href="<?= $this->url->get(['for' => 'auth_logout']) ?>" class="btn m-btn--pill    btn-secondary m-btn m-btn--custom m-btn--label-brand m-btn--bolder">
+                                    Thoát
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </li>
+</ul>
 						</div>
 					</div>
 					<!-- END: Topbar -->
@@ -162,354 +160,76 @@ a:3:{i:0;s:21278:"<!DOCTYPE html>
 		<div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark ">
 			<!-- BEGIN: Aside Menu -->
 			<div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-dark m-aside-menu--submenu-skin-dark " data-menu-vertical="true"
-				 data-menu-scrollable="false" data-menu-dropdown-timeout="500">
-				<ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
-					<li class="m-menu__item  m-menu__item--active" aria-haspopup="true">
-						<a href="index.html" class="m-menu__link ">
-							<i class="m-menu__link-icon flaticon-line-graph"></i>
-							<span class="m-menu__link-title">
-								<span class="m-menu__link-wrap">
-									<span class="m-menu__link-text">
-										Dashboard
-									</span>
-									<span class="m-menu__link-badge">
-										<span class="m-badge m-badge--danger">
-											2
-										</span>
-									</span>
-								</span>
-							</span>
-						</a>
-					</li>
-					<li class="m-menu__item m-menu__item--submenu m-menu__item--open" aria-haspopup="true" data-menu-submenu-toggle="hover">
-						<a href="#" class="m-menu__link m-menu__toggle">
-							<i class="m-menu__link-icon flaticon-tabs"></i>
-							<span class="m-menu__link-text">
-										Datatables
-									</span>
-							<i class="m-menu__ver-arrow la la-angle-right"></i>
-						</a>
-						<div class="m-menu__submenu " style="display: block;">
-							<span class="m-menu__arrow"></span>
-							<ul class="m-menu__subnav">
-								<li class="m-menu__item  m-menu__item--parent" aria-haspopup="true">
-											<span class="m-menu__link">
-												<span class="m-menu__link-text">
-													Datatables
-												</span>
-											</span>
-								</li>
-								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover">
-									<a href="#" class="m-menu__link m-menu__toggle">
-										<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-											<span></span>
-										</i>
-										<span class="m-menu__link-text">
-													Base
-												</span>
-										<i class="m-menu__ver-arrow la la-angle-right"></i>
-									</a>
-									<div class="m-menu__submenu ">
-										<span class="m-menu__arrow"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/data-local.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Local Data
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/data-json.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																JSON Data
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/data-ajax.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Ajax Data
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/html-table.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																HTML Table
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/record-selection.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Record Selection
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/local-sort.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Local Sort
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/row-details.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Row Details
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/column-rendering.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Column Rendering
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/column-width.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Column Width
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/responsive-columns.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Responsive Columns
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/base/translation.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Translation
-															</span>
-												</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover">
-									<a href="#" class="m-menu__link m-menu__toggle">
-										<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-											<span></span>
-										</i>
-										<span class="m-menu__link-text">
-													Scrolling
-												</span>
-										<i class="m-menu__ver-arrow la la-angle-right"></i>
-									</a>
-									<div class="m-menu__submenu ">
-										<span class="m-menu__arrow"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/scrolling/vertical.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Vertical Scrolling
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/scrolling/horizontal.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Horizontal Scrolling
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/scrolling/both.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Both Scrolling
-															</span>
-												</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover">
-									<a href="#" class="m-menu__link m-menu__toggle">
-										<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-											<span></span>
-										</i>
-										<span class="m-menu__link-text">
-													Locked Columns
-												</span>
-										<i class="m-menu__ver-arrow la la-angle-right"></i>
-									</a>
-									<div class="m-menu__submenu ">
-										<span class="m-menu__arrow"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/locked/left.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Left Locked Columns
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/locked/right.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Right Locked Columns
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/locked/both.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Both Locked Columns
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/locked/html-table.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																HTML Table
-															</span>
-												</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover">
-									<a href="#" class="m-menu__link m-menu__toggle">
-										<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-											<span></span>
-										</i>
-										<span class="m-menu__link-text">
-													Child Datatables
-												</span>
-										<i class="m-menu__ver-arrow la la-angle-right"></i>
-									</a>
-									<div class="m-menu__submenu ">
-										<span class="m-menu__arrow"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/child/data-local.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Local Data
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/child/data-ajax.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Remote Data
-															</span>
-												</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-								<li class="m-menu__item  m-menu__item--submenu" aria-haspopup="true" data-menu-submenu-toggle="hover">
-									<a href="#" class="m-menu__link m-menu__toggle">
-										<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-											<span></span>
-										</i>
-										<span class="m-menu__link-text">
-													API
-												</span>
-										<i class="m-menu__ver-arrow la la-angle-right"></i>
-									</a>
-									<div class="m-menu__submenu ">
-										<span class="m-menu__arrow"></span>
-										<ul class="m-menu__subnav">
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/api/methods.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																API Methods
-															</span>
-												</a>
-											</li>
-											<li class="m-menu__item " aria-haspopup="true">
-												<a href="components/datatables/api/events.html" class="m-menu__link ">
-													<i class="m-menu__link-bullet m-menu__link-bullet--dot">
-														<span></span>
-													</i>
-													<span class="m-menu__link-text">
-																Events
-															</span>
-												</a>
-											</li>
-										</ul>
-									</div>
-								</li>
-							</ul>
-						</div>
-					</li>
-					<li class="m-menu__section">
-						<h4 class="m-menu__section-text">
-							Components
-						</h4>
-						<i class="m-menu__section-icon flaticon-more-v3"></i>
-					</li>
-				</ul>
-			</div>
+     data-menu-scrollable="false" data-menu-dropdown-timeout="500">
+    <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
+        <?php foreach ($main_menu[0] as $menuItem) { ?>
+            <?php $hasSub = (isset($main_menu[$menuItem['name']]) ? true : false); ?>
+            <li class="m-menu__item <?= ($hasSub ? 'm-menu__item--submenu' : '') ?> " aria-haspopup="true"  data-menu-submenu-toggle="hover">
+                
+                <a href="<?= (isset($main_menu[$menuItem['name']]) ? 'javascript:;' : $menuItem['url']) ?>"
+                   class="m-menu__link <?= ($hasSub ? 'm-menu__toggle' : '') ?>"
+                    <?= ($hasSub ? 'data-menu-submenu-toggle="click" data-redirect="true" aria-haspopup="true"' : '') ?>
+                >
+                    <i class="m-menu__link-icon <?= $menuItem['icon_menu'] ?>"></i>
+                    <span class="m-menu__link-title">
+                        <span class="m-menu__link-wrap">
+                            <span class="m-menu__link-text">
+                                <?= $menuItem['title_menu'] ?>
+                            </span>
+
+                            <?php if ($hasSub) { ?>
+                                <i class="m-menu__hor-arrow la la-angle-down"></i>
+                                <i class="m-menu__ver-arrow la la-angle-right"></i>
+                            <?php } ?>
+                        </span>
+                    </span>
+                </a>
+
+                <?php if (isset($main_menu[$menuItem['name']])) { ?>
+                    <div class="m-menu__submenu m-menu__submenu m-menu__submenu--classic m-menu__submenu--left">
+                        <span class="m-menu__arrow m-menu__arrow--adjust"></span>
+                        <ul class="m-menu__subnav">
+                            <li class="m-menu__item" aria-haspopup="true">
+                                <a href="<?= $menuItem['url'] ?>" class="m-menu__link ">
+                                    <i class="m-menu__link-icon <?= $menuItem['icon_menu'] ?>"></i>
+                                    <span class="m-menu__link-title">
+                                        <span class="m-menu__link-wrap">
+                                            <span class="m-menu__link-text">
+                                                <?= $menuItem['title_menu'] ?>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                            <?php foreach ($main_menu[$menuItem['name']] as $menuSubItem) { ?>
+                            <li class="m-menu__item" aria-haspopup="true">
+                                <a href="<?= $menuSubItem['url'] ?>" class="m-menu__link ">
+                                    <i class="m-menu__link-icon <?= $menuSubItem['icon_menu'] ?>"></i>
+                                    <span class="m-menu__link-title">
+                                        <span class="m-menu__link-wrap">
+                                            <span class="m-menu__link-text">
+                                                <?= $menuSubItem['title_menu'] ?>
+                                            </span>
+                                        </span>
+                                    </span>
+                                </a>
+                            </li>
+                            <?php } ?>
+                        </ul>
+                    </div>
+                <?php } ?>
+            </li>
+        <?php } ?>
+
+        <li class="m-menu__section">
+            <h4 class="m-menu__section-text">
+                Components
+            </h4>
+            <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+
+    </ul>
+</div>
 			<!-- END: Aside Menu -->
 		</div>
 		<!-- END: Left Aside -->
@@ -517,11 +237,12 @@ a:3:{i:0;s:21278:"<!DOCTYPE html>
 
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
-                ";s:7:"content";N;i:1;s:726:"
+                ";s:7:"content";N;i:1;s:727:"
 			</div>
 		</div>
 	</div>
 	<!-- end:: Body -->
+
 </div>
 <!-- end:: Page -->
 

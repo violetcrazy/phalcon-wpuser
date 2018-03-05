@@ -75,4 +75,23 @@ class User extends Model
             return $this->metas;
         }
     }
+
+    public function getName()
+    {
+        if (!empty($this->display_name)) {
+            return $this->display_name;
+        } else {
+            return $this->user_nicename;
+        }
+    }
+
+    public function getAvatar()
+    {
+        if ($this->getMeta('avatar')) {
+            return $this->getMeta('avatar');
+        } else {
+            $email = trim( $this->user_email );
+            return "https://www.gravatar.com/avatar/{$email}";
+        }
+    }
 }

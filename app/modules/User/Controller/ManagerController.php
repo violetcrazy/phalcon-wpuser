@@ -5,7 +5,7 @@ namespace User\Controller;
 use \User\Model\User;
 use \Core\Controller\BaseController;
 
-class IndexController extends BaseController
+class ManagerController extends BaseController
 {
 
     public function initialize()
@@ -13,13 +13,13 @@ class IndexController extends BaseController
         parent::initialize();
     }
 
-    public function indexAction()
+    public function addAction()
     {
         $this->view->pick('user/index');
     }
 
-    public function profileAction()
+    public function editAction()
     {
-
+        $this->view->pick('user/index');
     }
 }
