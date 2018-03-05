@@ -1,4 +1,4 @@
-a:3:{i:0;s:11673:"<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -238,7 +238,10 @@ a:3:{i:0;s:11673:"<!DOCTYPE html>
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
-                ";s:7:"content";N;i:1;s:727:"
+                
+Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dolor dolore eaque, iure molestiae repudiandae sunt tempore unde. Ab ad assumenda consectetur consequatur culpa doloribus eligendi esse eveniet ex facere, facilis fuga magni molestias nesciunt nostrum officia perspiciatis quaerat quas, reiciendis repellat tenetur voluptate voluptatibus.
+
+
 			</div>
 		</div>
 	</div>
@@ -260,4 +263,4 @@ a:3:{i:0;s:11673:"<!DOCTYPE html>
 <!-- end::Body -->
 </body>
 
-</html>";}
+</html>

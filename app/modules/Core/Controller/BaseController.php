@@ -8,6 +8,7 @@ use User\Model\User;
 
 class BaseController extends Controller
 {
+    public $userCurrent = false;
 
     public function initialize()
     {
@@ -25,8 +26,10 @@ class BaseController extends Controller
                 $menus[$path['parent']][] = $path;
             }
 
-            if ((isset($path['auth']) && $path['auth'] == 1) && $this->router->getMatchedRoute()->getName() == $router->getName()) {
-                $this->checkAuth();
+            if (!empty($this->router->getMatchedRoute())) {
+                if ((isset($path['auth']) && $path['auth'] == 1) && $this->router->getMatchedRoute()->getName() == $router->getName()) {
+                    $this->checkAuth();
+                }
             }
         }
         $this->view->main_menu = $menus;
@@ -55,6 +58,7 @@ class BaseController extends Controller
                     'id' => $auth['ID']
                 )
             ));
+            $this->userCurrent = $userModel;
             $this->view->userCurrent = $userModel;
         }
     }

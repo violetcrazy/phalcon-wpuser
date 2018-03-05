@@ -1,8 +1,7 @@
 <?php
 
-namespace User\Controller;
+namespace Orders\Controller;
 
-use \User\Model\Orders;
 use \Core\Controller\BaseController;
 
 class IndexController extends BaseController
@@ -15,11 +14,11 @@ class IndexController extends BaseController
 
     public function indexAction()
     {
-        $this->view->pick('user/index');
+        $this->view->pick('orders/listing');
     }
 
-    public function profileAction()
+    public function addAction()
     {
-
+        $this->view->pick('orders/add');
     }
 }

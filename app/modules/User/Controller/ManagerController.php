@@ -2,7 +2,7 @@
 
 namespace User\Controller;
 
-use \User\Model\User;
+use \User\Model\Orders;
 use \Core\Controller\BaseController;
 
 class ManagerController extends BaseController

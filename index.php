@@ -112,7 +112,7 @@ class Bootstrap
             'warning' => 'alert alert-warning',
         ]);
         $flash->setAutoescape(false);
-        $this->di->set('flashSession', $flash);
+        $this->di->setShared('flashSession', $flash);
     }
 
     private function initEventManager($di)
@@ -120,40 +120,35 @@ class Bootstrap
         $eventsManager = new \Phalcon\Events\Manager();
         $dispatcher = new \Phalcon\Mvc\Dispatcher();
 
-
-
         $eventsManager->attach("dispatch:beforeDispatchLoop", function ($event, $dispatcher) use ($di) {
-            
+
         });
 
         $eventsManager->attach("dispatch:afterDispatchLoop", function ($event, $dispatcher) use ($di){
-            
+
         });
 
-        $eventsManager->attach('dispatch', function($event, $dispatcher, $exception) use ($di){
+        $eventsManager->attach('dispatch:beforeException', function($event, $dispatcher, $exception) use ($di){
             $type = $event->getType();
             $response = $di['response'];
 
-            if ($type == 'beforeException') {
-                if ($exception->getCode() == \Phalcon\Mvc\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND || $exception->getCode() == \Phalcon\Mvc\Dispatcher::EXCEPTION_ACTION_NOT_FOUND) {
-                    $response->setStatusCode(404, 'Not Found');
-                    $dispatcher->forward(array(
-                        'module' => 'core',
-                        'controller' => 'error',
-                        'action' => 'error404',
-                        'params' => array($exception)
-                    ));
-                    return false;
-                } else {
-                    $response->setStatusCode(503, 'Service Unavailable');
-                    $dispatcher->forward(array(
-                        'module' => 'core',
-                        'controller' => 'error',
-                        'action' => 'error',
-                        'params' => array($exception)
-                    ));
-                    return false;
-                }
+            if ($exception->getCode() == \Phalcon\Mvc\Dispatcher::EXCEPTION_HANDLER_NOT_FOUND || $exception->getCode() == \Phalcon\Mvc\Dispatcher::EXCEPTION_ACTION_NOT_FOUND) {
+                $response->setStatusCode(404, 'Not Found');
+                $dispatcher->forward(array(
+                    'module' => 'core',
+                    'controller' => 'error',
+                    'action' => 'error404',
+                ));
+                return false;
+            } else {
+                $response->setStatusCode(503, 'Service Unavailable');
+                $di['view']->e = $exception->getMessage();
+                $dispatcher->forward(array(
+                    'module' => 'core',
+                    'controller' => 'error',
+                    'action' => 'error'
+                ));
+                return false;
             }
         });
 
@@ -173,9 +168,11 @@ class Bootstrap
 
         $db = $di->get('db');
         $db->setEventsManager($eventsManager);
+        $di->set('db', $db);
 
         $dispatcher->setEventsManager($eventsManager);
         $di->set('dispatcher', $dispatcher);
+
     }
 
     private function dispatch()
@@ -313,7 +310,7 @@ class Bootstrap
 
         $application->setDI($this->di);
 
-        $response = $this->dispatch($this->di);
+        $response = $this->dispatch();
         $response->send();
 	}
 }

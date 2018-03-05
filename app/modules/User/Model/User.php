@@ -94,4 +94,22 @@ class User extends Model
             return "https://www.gravatar.com/avatar/{$email}";
         }
     }
+
+    public function addNote($noteContent, $userAddedNote)
+    {
+
+        $note = new UserNote();
+
+        $note->content = $noteContent;
+        $note->user_id = $this->ID;
+        $note->created_at = time();
+        $note->created_by = $userAddedNote;
+
+        if (!$note->create()) {
+            $noteMess = $note->getMessages();
+            foreach ($noteMess as $mess) {
+                $this->getDI()->getflashSession()->error('ADD NOTE USER: ' . $mess->getMessage());
+            }
+        }
+    }
 }

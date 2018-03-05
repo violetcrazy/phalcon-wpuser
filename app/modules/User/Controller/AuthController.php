@@ -3,7 +3,7 @@
 namespace User\Controller;
 
 use Phalcon\Exception;
-use \User\Model\User;
+use \User\Model\Orders;
 use \Core\Controller\BaseController;
 
 class AuthController extends BaseController
@@ -37,7 +37,7 @@ class AuthController extends BaseController
             $userName = $this->request->getPost('email', array('striptags', 'trim'), '');
             $pass = $this->request->getPost('password', array('striptags', 'trim'), '');
 
-            $userM = User::findFirst(array(
+            $userM = Orders::findFirst(array(
                 'conditions' => 'user_login = :email:',
                 'bind' => array(
                     'email' => $userName,
