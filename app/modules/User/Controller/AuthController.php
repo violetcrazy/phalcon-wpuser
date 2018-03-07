@@ -49,7 +49,10 @@ class AuthController extends BaseController
                 $authWP = wp_authenticate($userName, $pass );
 
                 if (isset($authWP->data->ID)){
+
                     $this->session->set('AUTH', $userM->getPublicInfo());
+                    $this->cookies->set('AUTH', $userM->getPublicInfo(), time() + (86400 * 30));
+
                     $this->flashSession->success('Đăng nhập thành công.');
                     if (!empty($urlRedirect)){
                         $this->response->redirect($urlRedirect);

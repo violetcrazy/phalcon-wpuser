@@ -37,20 +37,22 @@ class BaseController extends Controller
 
     public function checkAuth()
     {
-        $auth = $this->session->get('AUTH');
-        if (!$auth){
+        if (!$this->session->has('AUTH') && !$this->cookies->has('AUTH')){
 
-//            $redirectUrl[] = 2;
 //            $redirectUrl[] = $this->router->getRewriteUri();
 //            $redirectUrl[] = $this->request->getURI();
 //            $redirectUrl[] = $this->url->getBaseUri();
-
 //            $this->outputJSON($redirectUrl);
 
             $this->response->redirect(array(
                 'for' => 'auth_login'
             ));
         } else{
+            $auth = $this->session->get('AUTH');
+            if (!$auth) {
+                $auth = $this->cookies->get('AUTH');
+                $auth = @unserialize($auth->getValue());
+            }
 
             $userModel = User::findFirst(array(
                 'conditions' => 'ID = :id:',

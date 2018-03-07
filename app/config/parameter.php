@@ -6,9 +6,10 @@ $parameter = array(
 	'loader' => array(
 		'namespaces' => array(
 			'Plugin' => ROOT . '/plugins/',
+			'Common' => ROOT . '/common/',
 			'Core' => ROOT . '/app/modules/Core/',
 			'User' => ROOT . '/app/modules/User/',
-			'Orders' => ROOT . '/app/modules/Orders/',
+			'Orders' => ROOT . '/app/modules/Orders/'
 		)
 	),
 	'modules' => array(

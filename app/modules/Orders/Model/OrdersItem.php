@@ -5,7 +5,7 @@ use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 use Phalcon\Mvc\Model;
 
-class Orders extends Model
+class OrdersItem extends Model
 {
 
     public $item_id;
@@ -17,6 +17,8 @@ class Orders extends Model
     public $product_qty;
     public $product_discount;
     public $product_note;
+    public $customer_id;
+    public $saler_id;
 
     public function initialize()
     {

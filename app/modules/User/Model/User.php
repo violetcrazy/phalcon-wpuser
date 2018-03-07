@@ -112,4 +112,25 @@ class User extends Model
             }
         }
     }
+
+    public function addAdress($data)
+    {
+        $address = UserAddress::findFirst("address = '{$data['address']}' AND user_id = '{$this->ID}'");
+        if (!$address) {
+            $userAdress = new UserAddress();
+            $userAdress->user_id = $this->ID;
+            $userAdress->address = $data['address'];
+            $userAdress->phone = isset($data['phone']) ? $data['phone'] : '';
+            $userAdress->email = isset($data['email']) ? $data['email'] : $this->user_email;
+            $userAdress->name = isset($data['name']) ? $data['name'] : '';
+            $userAdress->lng = isset($data['lng']) ? $data['lng'] : '';
+            $userAdress->lat = isset($data['lat']) ? $data['lat'] : '';
+            $userAdress->province = isset($data['province']) ? $data['province'] : '';
+            $userAdress->district = isset($data['district']) ? $data['district'] : '';
+            $userAdress->note = isset($data['note']) ? $data['note'] : '';
+            $userAdress->created_at = time();
+
+            $userAdress->create();
+        }
+    }
 }

@@ -1,4 +1,8 @@
-<?php 
+<?php
+date_default_timezone_set('Asia/Bangkok');
+ini_set('display_errors', true);
+error_reporting(E_ALL);
+
 chdir(dirname(__DIR__));
 
 define('ROOT', __DIR__);
@@ -98,9 +102,28 @@ class Bootstrap
     private function iniSession()
     {
         // Session
+
         $session = new \Phalcon\Session\Adapter\Files();
         $session->start();
-        $this->di->set('session', $session);
+        $this->di->setShared('session', $session);
+
+        $this->di->setShared('crypt', function() {
+            $crypt = new \Phalcon\Crypt();
+            $crypt->setKey('34d#$DX#$%@#EDX3');
+            return $crypt;
+        });
+
+        $this->di->setShared('security', function () {
+            $security = new \Phalcon\Security();
+            return $security;
+        });
+
+        $this->di->setShared('cookies', function(){
+            $cookies = new \Phalcon\Http\Response\Cookies();
+            $cookies->useEncryption(true);
+
+            return $cookies;
+        });
     }
     private function iniFlashSession()
     {
