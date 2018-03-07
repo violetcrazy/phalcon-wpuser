@@ -39,4 +39,5 @@ $parameter = array(
         'stat'               => true,
         'compiled_separator' => '%'
     ),
+    'path_wp_load' => '/Volumes/DATA/web-working/wordpress/w1/wp-load.php'
 );

@@ -1,3 +1,33 @@
+<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
+    <div class="form-group m-form__group row">
+        <label for="<?= $data['id'] ?>" class="col-3 col-form-label">
+            <?= $data['label'] ?>
+        </label>
+
+        <div class="col-9">
+            <input class="form-control m-input" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+        </div>
+    </div><?php }; $this->_macros['formGroupText'] = \Closure::bind($this->_macros['formGroupText'], $this); ?><?php $this->_macros['formGroupInputGroup2Text'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupInputGroup2Text' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupInputGroup2Text' was called without parameter: data");  } }  ?>
+    <div class="form-group m-form__group">
+        <div class="input-group">
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">
+                    <?= $data['label'] ?>
+                </span>
+            </div>
+
+            <input type="text" class="form-control m-input" placeholder="Username" aria-describedby="basic-addon2">
+
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">
+                    <?= $data['label_after'] ?>
+                </span>
+            </div>
+        </div>
+    </div><?php }; $this->_macros['formGroupInputGroup2Text'] = \Closure::bind($this->_macros['formGroupInputGroup2Text'], $this); ?>
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -10,22 +40,11 @@
 	<title>
 
 	</title>
-	<!--begin::Web font -->
-	<script src="<?= $this->url->get() ?>/assets/vendors/base/fonts/webfont.js"></script>
-	<script>
-        WebFont.load({
-            google: {"families":["Poppins:300,400,500,600,700","Roboto:300,400,500,600,700"]},
-            active: function() {
-                sessionStorage.fonts = true;
-            }
-        });
-	</script>
-	<!--end::Web font -->
-
 	<link href="<?= $this->url->get() ?>/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"
 	/>
 	<link href="<?= $this->url->get() ?>/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="<?= $this->url->get() ?>/assets/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="<?= $this->url->get() ?>/assets/css/main.css" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="<?= $this->url->get() ?>/assets/demo/default/media/img/logo/favicon.ico" />
 
 

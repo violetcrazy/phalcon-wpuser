@@ -3,7 +3,7 @@
 namespace User\Controller;
 
 use Phalcon\Exception;
-use \User\Model\Orders;
+use \User\Model\User;
 use \Core\Controller\BaseController;
 
 class AuthController extends BaseController
@@ -37,7 +37,7 @@ class AuthController extends BaseController
             $userName = $this->request->getPost('email', array('striptags', 'trim'), '');
             $pass = $this->request->getPost('password', array('striptags', 'trim'), '');
 
-            $userM = Orders::findFirst(array(
+            $userM = User::findFirst(array(
                 'conditions' => 'user_login = :email:',
                 'bind' => array(
                     'email' => $userName,
@@ -45,9 +45,12 @@ class AuthController extends BaseController
             ));
 
             if ($userM) {
-                if ($userM->user_pass == md5($pass)){
+                require_once $this->config->path_wp_load;
+                $authWP = wp_authenticate($userName, $pass );
+
+                if (isset($authWP->data->ID)){
                     $this->session->set('AUTH', $userM->getPublicInfo());
-                    $this->flashSession->error('Đăng nhập thành công.');
+                    $this->flashSession->success('Đăng nhập thành công.');
                     if (!empty($urlRedirect)){
                         $this->response->redirect($urlRedirect);
                     } else {

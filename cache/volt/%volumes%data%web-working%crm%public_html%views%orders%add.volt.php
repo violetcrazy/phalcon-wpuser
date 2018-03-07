@@ -1,3 +1,46 @@
+<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
+    <div class="form-group m-form__group row">
+        <label for="<?= $data['id'] ?>" class="col-3 col-form-label">
+            <?= $data['label'] ?>
+        </label>
+
+        <div class="col-9">
+            <input class="form-control m-input" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+        </div>
+    </div><?php }; $this->_macros['formGroupText'] = \Closure::bind($this->_macros['formGroupText'], $this); ?><?php $this->_macros['formGroupInputVertical'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupInputVertical' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupInputVertical' was called without parameter: data");  } }  ?>
+    <div class="form-group">
+        <label for="<?= $data['id'] ?>" class="col-form-label">
+            <?= $data['label'] ?>
+        </label>
+        <?php if ($data['type'] == 'text') { ?>
+            <input class="form-control m-input" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+        <?php } elseif ($data['type'] == 'number') { ?>
+            <input class="form-control m-input" name="<?= $name ?>" type="number" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+        <?php } elseif ($data['type'] == 'textarea') { ?>
+            <textarea name="<?= $name ?>" id="<?= $data['id'] ?>" class="form-control" rows="3"></textarea>
+        <?php } ?>
+
+    </div><?php }; $this->_macros['formGroupInputVertical'] = \Closure::bind($this->_macros['formGroupInputVertical'], $this); ?><?php $this->_macros['formGroupInputGroup2Text'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupInputGroup2Text' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupInputGroup2Text' was called without parameter: data");  } }  ?>
+    <div class="form-group m-form__group">
+        <div class="input-group">
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">
+                    <?= $data['label'] ?>
+                </span>
+            </div>
+
+            <input type="text" class="form-control m-input" placeholder="" aria-describedby="basic-addon2">
+
+            <div class="input-group-append">
+                <span class="input-group-text" id="basic-addon2">
+                    <?= $data['label_after'] ?>
+                </span>
+            </div>
+        </div>
+    </div><?php }; $this->_macros['formGroupInputGroup2Text'] = \Closure::bind($this->_macros['formGroupInputGroup2Text'], $this); ?>
+
+
+
 <!DOCTYPE html>
 <html>
 
@@ -10,27 +53,33 @@
 	<title>
 
 	</title>
-	<!--begin::Web font -->
-	<script src="<?= $this->url->get() ?>/assets/vendors/base/fonts/webfont.js"></script>
-	<script>
-        WebFont.load({
-            google: {"families":["Poppins:300,400,500,600,700","Roboto:300,400,500,600,700"]},
-            active: function() {
-                sessionStorage.fonts = true;
-            }
-        });
-	</script>
-	<!--end::Web font -->
-
 	<link href="<?= $this->url->get() ?>/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"
 	/>
 	<link href="<?= $this->url->get() ?>/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="<?= $this->url->get() ?>/assets/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="<?= $this->url->get() ?>/assets/css/main.css" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="<?= $this->url->get() ?>/assets/demo/default/media/img/logo/favicon.ico" />
 
 
-	<script type="text/javascript"></script>
-
+	<!--begin::Base Scripts -->
+	<script src="<?= $this->url->get() ?>assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+	<script src="<?= $this->url->get() ?>assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
+	<!--end::Base Scripts -->
+	<!--begin::Page Vendors -->
+	<script src="<?= $this->url->get() ?>assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
+	<!--end::Page Vendors -->
+	<!--begin::Page Snippets -->
+	<script src="<?= $this->url->get() ?>assets/app/js/dashboard.js" type="text/javascript"></script>
+	<!--end::Page Snippets -->
+	<script src="<?= $this->url->get() ?>assets/js/app.js"></script>
+	<script src="<?= $this->url->get() ?>assets/js/nano.js"></script>
+	<script src="<?= $this->url->get() ?>assets/js/wnumb-1.1.03/wNumb.js"></script>
+	<script>
+        var numberFormat = wNumb({
+            mark: '.',
+            thousand: ','
+        });
+	</script>
 </head>
 
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
@@ -239,8 +288,290 @@
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
                 
-Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dolor dolore eaque, iure molestiae repudiandae sunt tempore unde. Ab ad assumenda consectetur consequatur culpa doloribus eligendi esse eveniet ex facere, facilis fuga magni molestias nesciunt nostrum officia perspiciatis quaerat quas, reiciendis repellat tenetur voluptate voluptatibus.
 
+    <div class="row">
+
+        <div class="col-lg-5">
+            <div class="m-portlet">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                Thông tin người mua hàng
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body ">
+                    <h5><b>Người mua</b></h5>
+                    <?= $this->callMacro('formGroupText', ['billing[name]', ['label' => 'Họ & tên', 'value' => '', 'id' => 'user_name']]) ?>
+                    <?= $this->callMacro('formGroupText', ['billing[phone]', ['label' => 'Điện thoại', 'value' => '', 'id' => 'user_phone']]) ?>
+                    <?= $this->callMacro('formGroupText', ['billing[email]', ['label' => 'Email', 'value' => '', 'id' => 'user_email']]) ?>
+                    <?= $this->callMacro('formGroupText', ['billing[address]', ['label' => 'Địa chỉ', 'value' => '', 'id' => 'user_address']]) ?>
+                </div>
+
+                <div class="m-portlet__body">
+                    <h5><b>Người nhận (nếu có)</b> </h5>
+                    <?= $this->callMacro('formGroupText', ['shipping[name]', ['label' => 'Họ & tên', 'value' => '', 'id' => 'user_name']]) ?>
+                    <?= $this->callMacro('formGroupText', ['shipping[phone]', ['label' => 'Điện thoại', 'value' => '', 'id' => 'user_phone']]) ?>
+                    <?= $this->callMacro('formGroupText', ['shipping[email]', ['label' => 'Email', 'value' => '', 'id' => 'user_email']]) ?>
+                    <?= $this->callMacro('formGroupText', ['shipping[address]', ['label' => 'Địa chỉ', 'value' => '', 'id' => 'user_address']]) ?>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="col-lg-7">
+            <div class="m-portlet">
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                Sản phẩm
+                            </h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-portlet__body">
+                    <?= $this->callMacro('formGroupInputGroup2Text', ['coupon', ['label' => 'Mã giảm giá', 'value' => '', 'id' => 'coupon', 'label_after' => '- 0 đ']]) ?>
+
+                    <div class="groupTotal alert m-alert m-alert--default">
+                        <p class="text-right js_subtotal">
+                            <b>Tổng cộng</b>
+                            <span class="value">0</span><sup>đ</sup>
+                        </p>
+
+                        <p class="text-right js_discount">
+                            <a href="javascript:;" data-toggle="modal" data-target="#model_discount">Edit</a> <b>Giảm giá</b>
+                            <span class="value">0</span><sup>đ</sup>
+                        </p>
+
+                        <p class="text-right js_total">
+                            <b>Thanh toán</b>
+                            <span class="value priceBig">0</span><sup>đ</sup>
+                        </p>
+
+                    </div>
+
+                    <div class="table tableItems">
+                        <div class="pull-left">
+                            <h5 class="m-portlet__head-text">
+                                <b>Các Sản phẩm</b>
+                            </h5>
+                        </div>
+                        <div class="pull-right">
+                            <button type="button" class="btn btn-focus btn-sm" data-toggle="modal" data-target="#model_fee">
+                                Thêm phí
+                            </button>
+
+                        </div>
+                        <div class="clearfix"></div>
+                        <br>
+
+                        <table class="table tableExcel">
+                            <thead>
+                            <tr>
+                                <th>Tên sản phẩm</th>
+                                <th>Giá</th>
+                                <th>Số lượng</th>
+                                <th>Thành tiền</th>
+                            </tr>
+                            </thead>
+
+                            <tbody id="itemsLine">
+                                <tr class="rowExcel">
+                                    <td colspan="2">
+                                        <input type="text" class="js_product_name" placeholder="Tên sản phẩm"></td>
+                                    <td width="20%">
+                                        <input type="text" class="js_product_price" placeholder="Giá"></td>
+                                    <td width="10%">
+                                        <input type="number" class="js_product_qty" value="1">
+                                        <button class="btn btn-add-row" onclick="order.addProduct(event, '#itemsLine')">
+                                            <span class="fa fa-plus"></span>
+                                        </button>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+
+
+    
+    <div class="modal fade" id="model_fee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">
+                        Thêm chi phí của đơn hàng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?= $this->callMacro('formGroupInputVertical', ['feeplus[value]', ['label' => 'Giá trị', 'value' => '', 'id' => 'feeplus_value', 'type' => 'number']]) ?>
+                    <?= $this->callMacro('formGroupInputVertical', ['feeplus[note]', ['label' => 'Tên chi phí', 'value' => '', 'id' => 'feeplus_note', 'type' => 'textarea']]) ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Đóng lại
+                    </button>
+                    <button type="button" class="btn btn-success">
+                        Thêm phí này.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+    
+    <div class="modal fade" id="model_discount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">
+                        Giảm giá đơn hàng này
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?= $this->callMacro('formGroupInputVertical', ['discount[value]', ['label' => 'Giảm', 'value' => '', 'id' => 'discount_value', 'type' => 'number']]) ?>
+                    <?= $this->callMacro('formGroupInputVertical', ['discount[note]', ['label' => 'Lý do, Ghi chú', 'value' => '', 'id' => 'discount_note', 'type' => 'textarea']]) ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Đóng lại
+                    </button>
+                    <button type="button" class="btn btn-success">
+                        Lưu thay đổi.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+
+    
+    <div class="modal fade" id="model_addproduct" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="">
+                        Thêm sản phẩm
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <?= $this->callMacro('formGroupInputVertical', ['addproduct[name]', ['label' => 'Tên sản phẩm ', 'value' => '', 'id' => 'addproduct_name', 'type' => 'text']]) ?>
+                    <?= $this->callMacro('formGroupInputVertical', ['addproduct[image]', ['label' => 'Hình ảnh (url)', 'value' => '', 'id' => 'addproduct_image', 'type' => 'text']]) ?>
+                    <?= $this->callMacro('formGroupInputVertical', ['addproduct[price]', ['label' => 'Giá', 'value' => '', 'id' => 'addproduct_price', 'type' => 'number']]) ?>
+                    <?= $this->callMacro('formGroupInputVertical', ['addproduct[qty]', ['label' => 'Số lượng', 'value' => '', 'id' => 'addproduct_qty', 'type' => 'number']]) ?>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Đóng lại
+                    </button>
+                    <button type="button" class="btn btn-success">
+                        Thêm sản phẩm.
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div style="display: none">
+        <table id="temlateItemLine">
+            <tbody>
+                <tr>
+                    <td>
+                        {name}
+                        <input type="hidden" name="line_item[{index}][name]" value="{name}">
+                        <input type="hidden" name="line_item[{index}][price]" value="{price}">
+                        <input type="hidden" name="line_item[{index}][qty]" value="{qty}">
+                    </td>
+                    <td><b>{price_format}</b></td>
+                    <td>
+                        x {qty}
+                    </td>
+                    <td>
+                        <b class="">{total_format}</b>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+
+
+        var order = {
+            itempline: {}
+        };
+
+        order.addProduct = function(event, tbody){
+            var d = new Date();
+
+            var $tr = $(event.target).closest('tr');
+            var productData = {
+                'name': $.trim($tr.find('.js_product_name').val()),
+                'price': parseFloat($tr.find('.js_product_price').val()),
+                'qty': parseInt($tr.find('.js_product_qty').val())
+            };
+
+            if (productData.name === '' || productData.price === '') {
+                return false;
+            }
+
+            if (productData.price > 0){
+                productData.total = productData.price * productData.qty
+            }
+
+            productData.index = d.getTime();
+            productData.price_format = numberFormat.to(productData.price);
+            productData.total_format = numberFormat.to(productData.total);
+
+            order.itempline[productData.index] = productData;
+
+            var htmlTemplate = $('#temlateItemLine tbody').html();
+            $(tbody).prepend(nano(htmlTemplate, productData));
+
+            $tr.find('.js_product_name').val('').focus();
+            $tr.find('.js_product_price').val(0);
+            $tr.find('.js_product_qty').val(1);
+
+            $(document).trigger('refreshTotal');
+        };
+
+        $(document).on('input', '#coupon', function(){
+            $(document).trigger('updateCoupon')
+        });
+
+
+    </script>
 
 			</div>
 		</div>
@@ -249,17 +580,6 @@ Lorem ipsum dolor sit amet, consectetur adipisicing elit. At dolor dolore eaque,
 
 </div>
 <!-- end:: Page -->
-
-<!--begin::Base Scripts -->
-<script src="<?= $this->url->get() ?>assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-<script src="<?= $this->url->get() ?>assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
-<!--end::Base Scripts -->
-<!--begin::Page Vendors -->
-<script src="<?= $this->url->get() ?>assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
-<!--end::Page Vendors -->
-<!--begin::Page Snippets -->
-<script src="<?= $this->url->get() ?>assets/app/js/dashboard.js" type="text/javascript"></script>
-<!--end::Page Snippets -->
 <!-- end::Body -->
 </body>
 

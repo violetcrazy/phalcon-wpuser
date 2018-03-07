@@ -1,3 +1,5 @@
+{% include 'marco/form_element.volt' %}
+
 <!DOCTYPE html>
 <html>
 
@@ -10,27 +12,33 @@
 	<title>
 
 	</title>
-	<!--begin::Web font -->
-	<script src="{{ url.get() }}/assets/vendors/base/fonts/webfont.js"></script>
-	<script>
-        WebFont.load({
-            google: {"families":["Poppins:300,400,500,600,700","Roboto:300,400,500,600,700"]},
-            active: function() {
-                sessionStorage.fonts = true;
-            }
-        });
-	</script>
-	<!--end::Web font -->
-
 	<link href="{{ url.get() }}/assets/vendors/custom/fullcalendar/fullcalendar.bundle.css" rel="stylesheet" type="text/css"
 	/>
 	<link href="{{ url.get() }}/assets/vendors/base/vendors.bundle.css" rel="stylesheet" type="text/css" />
 	<link href="{{ url.get() }}/assets/demo/default/base/style.bundle.css" rel="stylesheet" type="text/css" />
+	<link href="{{ url.get() }}/assets/css/main.css" rel="stylesheet" type="text/css" />
 	<link rel="shortcut icon" href="{{ url.get() }}/assets/demo/default/media/img/logo/favicon.ico" />
 
 
-	<script type="text/javascript"></script>
-
+	<!--begin::Base Scripts -->
+	<script src="{{ url.get() }}assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
+	<script src="{{ url.get() }}assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
+	<!--end::Base Scripts -->
+	<!--begin::Page Vendors -->
+	<script src="{{ url.get() }}assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
+	<!--end::Page Vendors -->
+	<!--begin::Page Snippets -->
+	<script src="{{ url.get() }}assets/app/js/dashboard.js" type="text/javascript"></script>
+	<!--end::Page Snippets -->
+	<script src="{{ url.get() }}assets/js/app.js"></script>
+	<script src="{{ url.get() }}assets/js/nano.js"></script>
+	<script src="{{ url.get() }}assets/js/wnumb-1.1.03/wNumb.js"></script>
+	<script>
+        var numberFormat = wNumb({
+            mark: '.',
+            thousand: ','
+        });
+	</script>
 </head>
 
 <body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
@@ -119,17 +127,6 @@
 
 </div>
 <!-- end:: Page -->
-
-<!--begin::Base Scripts -->
-<script src="{{ url.get() }}assets/vendors/base/vendors.bundle.js" type="text/javascript"></script>
-<script src="{{ url.get() }}assets/demo/default/base/scripts.bundle.js" type="text/javascript"></script>
-<!--end::Base Scripts -->
-<!--begin::Page Vendors -->
-<script src="{{ url.get() }}assets/vendors/custom/fullcalendar/fullcalendar.bundle.js" type="text/javascript"></script>
-<!--end::Page Vendors -->
-<!--begin::Page Snippets -->
-<script src="{{ url.get() }}assets/app/js/dashboard.js" type="text/javascript"></script>
-<!--end::Page Snippets -->
 <!-- end::Body -->
 </body>
 
