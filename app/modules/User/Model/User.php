@@ -1,6 +1,7 @@
 <?php
 namespace User\Model;
 
+use Orders\Model\OrdersItem;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
 use Phalcon\Mvc\Model;
@@ -112,6 +113,8 @@ class User extends Model
             }
         }
     }
+
+
 
     public function addAdress($data)
     {

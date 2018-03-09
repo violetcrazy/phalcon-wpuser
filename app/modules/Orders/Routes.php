@@ -11,7 +11,7 @@ class Routes
 
         $router->add('/don-hang', array(
             'module' => 'orders',
-            'controller' => 'index',
+            'controller' => 'list',
             'action' => 'index',
             'auth' => true,
             'parent' => 0,
@@ -22,7 +22,7 @@ class Routes
         
         $router->add('/tao-don-hang', array(
             'module' => 'orders',
-            'controller' => 'index',
+            'controller' => 'single',
             'action' => 'add',
             'auth' => true,
             'parent' => 'order_index',
@@ -30,6 +30,27 @@ class Routes
             'title_menu' => 'Tạo đơn hàng mới',
             'icon_menu' => 'flaticon-user-settings'
         ))->setName('order_add');
+
+        $router->add('/chinh-sua-don-hang/{id:[0-9]+}', array(
+            'module' => 'orders',
+            'controller' => 'single',
+            'action' => 'edit',
+            'auth' => true,
+        ))->setName('order_edit');
+
+        $router->add('/order-ajax/them-ghi-chu{query:(/.*)*}', array(
+            'module' => 'orders',
+            'controller' => 'ajax',
+            'action' => 'addnote',
+            'auth' => true,
+        ))->setName('order_addnote_ajax');
+
+        $router->add('/order-ajax/ghi-chu{query:(/.*)*}', array(
+            'module' => 'orders',
+            'controller' => 'ajax',
+            'action' => 'orderNotes',
+            'auth' => true,
+        ))->setName('order_notes_ajax');
 
         return $router;
 

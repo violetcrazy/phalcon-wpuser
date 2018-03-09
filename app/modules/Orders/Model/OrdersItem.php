@@ -24,4 +24,23 @@ class OrdersItem extends Model
     {
         $this->setSource('crm_orders_item');
     }
+
+    public function getSchemaApi()
+    {
+        $args = array(
+            "item_id" => $this->item_id,
+            "order_id" => $this->order_id,
+            "product_id" => $this->product_id,
+            "name" => $this->product_name,
+            "sku" => $this->product_sku,
+            "price" => $this->product_price,
+            "qty" => $this->product_qty,
+            "product_discount" => $this->product_discount,
+            "product_note" => $this->product_note,
+            "customer_id" => $this->customer_id,
+            "saler_id" => $this->saler_id,
+        );
+
+        return $args;
+    }
 }

@@ -1,4 +1,4 @@
-a:3:{i:0;s:15954:"<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
+a:3:{i:0;s:16164:"<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
     <div class="form-group m-form__group row">
         <label for="<?= $data['id'] ?>" class="col-3 col-form-label">
             <?= $data['label'] ?>
@@ -13,7 +13,7 @@ a:3:{i:0;s:15954:"<?php $this->_macros['formGroupText'] = function($__p = null) 
             <?= $data['label'] ?>
         </label>
         <?php if ($data['type'] == 'text') { ?>
-            <input class="form-control m-input" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+            <input class="form-control m-input <?= (isset($data['class']) ? $data['class'] : '') ?>" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
         <?php } elseif ($data['type'] == 'number') { ?>
             <input class="form-control m-input" name="<?= $name ?>" type="number" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
         <?php } elseif ($data['type'] == 'textarea') { ?>
@@ -71,8 +71,10 @@ a:3:{i:0;s:15954:"<?php $this->_macros['formGroupText'] = function($__p = null) 
 	<!--begin::Page Snippets -->
 	<script src="<?= $this->url->get() ?>assets/app/js/dashboard.js" type="text/javascript"></script>
 	<!--end::Page Snippets -->
+	<script src="<?= $this->url->get() ?>assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 	<script src="<?= $this->url->get() ?>assets/js/app.js"></script>
 	<script src="<?= $this->url->get() ?>assets/js/nano.js"></script>
+	<script src="<?= $this->url->get() ?>assets/js/jquery.number.min.js"></script>
 	<script src="<?= $this->url->get() ?>assets/js/wnumb-1.1.03/wNumb.js"></script>
 	<script>
         var numberFormat = wNumb({
@@ -206,8 +208,8 @@ a:3:{i:0;s:15954:"<?php $this->_macros['formGroupText'] = function($__p = null) 
 		<button class="m-aside-left-close  m-aside-left-close--skin-dark " id="m_aside_left_close_btn">
 			<i class="la la-close"></i>
 		</button>
+
 		<div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark ">
-			<!-- BEGIN: Aside Menu -->
 			<div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-dark m-aside-menu--submenu-skin-dark " data-menu-vertical="true"
      data-menu-scrollable="false" data-menu-dropdown-timeout="500">
     <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
@@ -279,17 +281,17 @@ a:3:{i:0;s:15954:"<?php $this->_macros['formGroupText'] = function($__p = null) 
 
     </ul>
 </div>
-			<!-- END: Aside Menu -->
 		</div>
 		<!-- END: Left Aside -->
-
 
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
-                ";s:7:"content";N;i:1;s:112:"
+                ";s:7:"content";N;i:1;s:144:"
 			</div>
 		</div>
+		<div class="clearfix"></div>
+
 	</div>
 	<!-- end:: Body -->
 

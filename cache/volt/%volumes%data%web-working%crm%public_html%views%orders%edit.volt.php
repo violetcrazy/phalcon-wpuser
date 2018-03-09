@@ -288,131 +288,334 @@
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
                 
-    <div class="m-portlet">
-        <div class="m-portlet__body  m-portlet__body--no-padding">
-            <div class="row m-row--no-padding m-row--col-separator-xl">
-                <div class="col-xl-4">
-                    <!--begin:: Widgets/Stats2-1 -->
-                    <div class="m-widget1">
-                        <div class="m-widget1__item">
-                            <div class="row m-row--no-padding align-items-center">
-                                <div class="col">
-                                    <h3 class="m-widget1__title">
-                                        Member Profit
-                                    </h3>
-                                    <span class="m-widget1__desc">
-															Awerage Weekly Profit
-														</span>
-                                </div>
-                                <div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand">
-															+$17,800
-														</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-widget1__item">
-                            <div class="row m-row--no-padding align-items-center">
-                                <div class="col">
-                                    <h3 class="m-widget1__title">
-                                        Orders
-                                    </h3>
-                                    <span class="m-widget1__desc">
-															Weekly Customer Orders
-														</span>
-                                </div>
-                                <div class="col m--align-right">
-														<span class="m-widget1__number m--font-danger">
-															+1,800
-														</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-widget1__item">
-                            <div class="row m-row--no-padding align-items-center">
-                                <div class="col">
-                                    <h3 class="m-widget1__title">
-                                        Issue Reports
-                                    </h3>
-                                    <span class="m-widget1__desc">
-															System bugs and issues
-														</span>
-                                </div>
-                                <div class="col m--align-right">
-														<span class="m-widget1__number m--font-success">
-															-27,49%
-														</span>
-                                </div>
-                            </div>
-                        </div>
+
+    <form action="" class="formMain" method="post">
+        <div class="m-portlet--head-solid-bg m-portlet m-portlet--mobile m-portlet--<?= $this->template->getColorStatusOrder($orderDetail->status) ?>">
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+
+                        <h3 class="m-portlet__head-text">
+                            Chi tiết đơn hàng #<?= $orderDetail->order_id ?>
+                            <small>
+                                <b>IP: </b><?= $orderDetail->getIp() ?>
+                            </small>
+                        </h3>
+
                     </div>
-                    <!--end:: Widgets/Stats2-1 -->
+                    <div>
+                        <b class="m--icon-font-size-lg1"><?= $this->util->currencyFormat($orderDetail->total_price) ?></b>
+                        <span class="m--icon-font-size-sm2"> - Thanh toán tiền mặt khi nhận đuược hàng</span>
+                    </div>
                 </div>
-                <div class="col-xl-4">
-                    <!--begin:: Widgets/Daily Sales-->
-                    <div class="m-widget14">
-                        <div class="m-widget14__header m--margin-bottom-30">
-                            <h3 class="m-widget14__title">
-                                Daily Sales
-                            </h3>
-                            <span class="m-widget14__desc">
-													Check out each collumn for more details
-												</span>
-                        </div>
-                        <div class="m-widget14__chart" style="height:120px;">
-                            <canvas  id="m_chart_daily_sales"></canvas>
-                        </div>
-                    </div>
-                    <!--end:: Widgets/Daily Sales-->
+
+                <div class="m-portlet__head-tools">
+                    <select onchange="form.submit()" class="form-control m-input m-input--square" id="" name="order_status">
+                        <?= $this->template->optionsStatusOrder($orderDetail->status) ?>
+                    </select>
                 </div>
-                <div class="col-xl-4">
-                    <!--begin:: Widgets/Profit Share-->
-                    <div class="m-widget14">
-                        <div class="m-widget14__header">
-                            <h3 class="m-widget14__title">
-                                Profit Share
-                            </h3>
-                            <span class="m-widget14__desc">
-													Profit Share between customers
-												</span>
-                        </div>
-                        <div class="row  align-items-center">
-                            <div class="col">
-                                <div id="m_chart_profit_share" class="m-widget14__chart" style="height: 160px">
-                                    <div class="m-widget14__stat">
-                                        45
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="m-widget14__legends">
-                                    <div class="m-widget14__legend">
-                                        <span class="m-widget14__legend-bullet m--bg-accent"></span>
-                                        <span class="m-widget14__legend-text">
-																37% Sport Tickets
-															</span>
-                                    </div>
-                                    <div class="m-widget14__legend">
-                                        <span class="m-widget14__legend-bullet m--bg-warning"></span>
-                                        <span class="m-widget14__legend-text">
-																47% Business Events
-															</span>
-                                    </div>
-                                    <div class="m-widget14__legend">
-                                        <span class="m-widget14__legend-bullet m--bg-brand"></span>
-                                        <span class="m-widget14__legend-text">
-																19% Others
-															</span>
-                                    </div>
-                                </div>
+
+            </div>
+            <div class="m-portlet__body">
+                <div class="row">
+                    <div class="col-lg-5">
+                        <div class="form-group m-form__group">
+                            <label class="col-form-label">
+                                Người phụ trách
+                            </label>
+                            <div class="">
+                                <select class="form-control selectCskh" id="" name="param">
+                                    <option></option>
+                                </select>
                             </div>
                         </div>
+
+                        <h5><b>Người mua</b></h5>
+                        <?= $this->callMacro('formGroupText', ['billing[name]', ['label' => 'Họ & tên', 'value' => $orderDetail->getBilling('name'), 'id' => 'user_name']]) ?>
+                        <?= $this->callMacro('formGroupText', ['billing[phone]', ['label' => 'Điện thoại', 'value' => $orderDetail->getBilling('phone'), 'id' => 'user_phone']]) ?>
+                        <?= $this->callMacro('formGroupText', ['billing[email]', ['label' => 'Email', 'value' => $orderDetail->getBilling('email'), 'id' => 'user_email']]) ?>
+                        <?= $this->callMacro('formGroupText', ['billing[address]', ['label' => 'Địa chỉ', 'value' => $orderDetail->getBilling('address'), 'id' => 'user_address']]) ?>
+
+                        <h5 class=""><b>Người nhận</b></h5>
+                        <?= $this->callMacro('formGroupText', ['shipping[name]', ['label' => 'Họ & tên', 'value' => $orderDetail->getShipping('name'), 'id' => 'user_name']]) ?>
+                        <?= $this->callMacro('formGroupText', ['shipping[phone]', ['label' => 'Điện thoại', 'value' => $orderDetail->getShipping('phone'), 'id' => 'user_phone']]) ?>
+                        <?= $this->callMacro('formGroupText', ['shipping[email]', ['label' => 'Email', 'value' => $orderDetail->getShipping('email'), 'id' => 'user_email']]) ?>
+                        <?= $this->callMacro('formGroupText', ['shipping[address]', ['label' => 'Địa chỉ', 'value' => $orderDetail->getShipping('address'), 'id' => 'user_address']]) ?>
                     </div>
-                    <!--end:: Widgets/Profit Share-->
+
+                    <div class="col-lg-7">
+                        <input type="hidden" id="order_detail" name="order_detail">
+<div class="groupTotal alert m-alert m-alert--default">
+    <table class="table">
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="table tableItems">
+    <div class="pull-left">
+        <h5 class="m-portlet__head-text">
+            <b>Các Sản phẩm</b>
+        </h5>
+    </div>
+    <div class="pull-right">
+        <button type="button" class="btn btn-success btn-sm" data-toggle="modal" data-target="#model_discount">
+            Thêm giảm giá
+        </button>
+        <button type="button" class="btn btn-focus btn-sm" data-toggle="modal" data-target="#model_fee">
+            Thêm phí
+        </button>
+
+    </div>
+    <div class="clearfix"></div>
+    <br>
+
+    <table class="table tableExcel">
+        <thead>
+        <tr>
+            <th>Tên sản phẩm</th>
+            <th>Giá</th>
+            <th>Số lượng</th>
+            <th>Thành tiền</th>
+            <th></th>
+        </tr>
+        </thead>
+
+        <tbody id="itemsLine">
+        </tbody>
+    </table>
+
+    <table class="table tableExcel">
+        <tbody id="">
+        <tr class="rowExcel">
+            <td colspan="2">
+                <input type="text" class="js_product_name" placeholder="Tên sản phẩm"></td>
+            <td width="20%">
+                <input type="text" class="js_product_price formatCurrency" placeholder="Giá"></td>
+            <td width="10%">
+                <input type="number" class="js_product_qty" value="1">
+                <button
+                        type="button"
+                        class="btn btn-add-row" onclick="order.addProduct(event, '#itemsLine')">
+                    <span class="fa fa-plus"></span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+
+
+<div style="display: none">
+    <table id="temlateItemLine">
+        <tbody>
+        <tr>
+            <td>
+                <b>{name}</b>
+                <input type="hidden" name="line_item[{index}][name]" value="{name}">
+                <input type="hidden" name="line_item[{index}][price]" value="{price}">
+                <input type="hidden" name="line_item[{index}][qty]" value="{qty}">
+            </td>
+            <td><b>{price_format}</b></td>
+            <td>
+                x {qty}
+                <div class="noenter">
+                    <button type="button" class="btn btn-metal btn-xs" onclick="order.changeQty(event, '{index}', '-')">Trừ</button>
+                    <button type="button" class="btn btn-warning btn-xs" onclick="order.changeQty(event, '{index}', '+')">Cộng</button>
+                </div>
+            </td>
+            <td>
+                <b class="">{total_format}</b>
+            </td>
+            <td width="1%">
+                <button class="m-portlet__nav-link btn m-btn m-btn--hover-primary m-btn--icon m-btn--icon-only m-btn--pill"
+                        onclick="order.deleteItem(event, '{index}')"
+                        type="button"
+                        title="Delete">
+                    <i class="la la-close"></i>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-form m-portlet__foot m-portlet__foot--fit">
+                <div class="m-form__actions m-form__actions text-right">
+                    <button type="submit" class="btn btn-lg btn-success" style="width: 200px;">
+                        Lưu thay đổi
+                    </button>
                 </div>
             </div>
         </div>
+    </form>
+
+    <form action="" onsubmit="order.saveNote(event, '<?= $this->url->get(['for' => 'order_addnote_ajax']) ?>')">
+        <div class="m-portlet m-portlet--full-height " id="formNote">
+
+            <div class="m-portlet__head">
+                <div class="m-portlet__head-caption">
+                    <div class="m-portlet__head-title">
+                        <h3 class="m-portlet__head-text">
+                            Ghi chú đơn hàng
+                        </h3>
+                    </div>
+                </div>
+            </div>
+
+            <div class="m-portlet__body">
+
+                <div class="form-group m-form__group">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <span class="input-group-text">
+                                <label class="m-checkbox m-checkbox--single">
+                                    <input type="checkbox" name="note_type" value="on">
+                                    <span></span>
+                                </label>
+                            </span>
+                            <span class="input-group-text" id="basic-addon1">
+                                Chung
+                            </span>
+                        </div>
+
+                        <input type="text" class="form-control" placeholder="Ghi chú đơn hàng" name="note_content">
+                        <input type="hidden" name="order_id" value="<?= $orderDetail->order_id ?>">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary loading-click" type="submit" data-target="#formNote">
+                                Thêm ghi chú
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="m-widget3" id="orderNotes">
+
+                </div>
+            </div>
+        </div>
+    </form>
+
+
+
+    
+<div class="modal fade" id="model_fee" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLongTitle">
+                    Thêm chi phí của đơn hàng
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                </button>
+            </div>
+            <div class="modal-body">
+
+                <div class="feePlusList" id="feePlusList">
+                    <table class="table table-bordered">
+
+                    </table>
+                </div>
+                <table class="table tableExcel">
+                    <tbody id="">
+                    <tr class="rowExcel">
+                        <td colspan="2">
+                            <input type="text" class="js_fee_name" placeholder="Tên, ghi chú khoản phí"></td>
+                        <td width="20%">
+                            <input type="text" class="formatCurrency js_fee_price" placeholder="Giá trị"></td>
+                        <td width="10%">
+                            <button type="button"
+                                    class="btn btn-add-row"
+                                    data-note=".js_fee_name"
+                                    data-value=".js_fee_price"
+                                    onclick="order.addFee(event, this, '#feePlusList')">
+                                <span class="fa fa-plus"></span>
+                            </button>
+                        </td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Đóng lại
+                </button>
+            </div>
+        </div>
     </div>
+</div>
+
+
+
+    
+<div class="modal fade" id="model_discount" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" style="display: none;">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="">
+                    Giảm giá đơn hàng này
+                </h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">
+                            ×
+                        </span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <?= $this->callMacro('formGroupInputVertical', ['discount[value]', ['label' => 'Giảm', 'value' => '', 'id' => 'discount_value', 'type' => 'text', 'class' => 'formatCurrency']]) ?>
+                <?= $this->callMacro('formGroupInputVertical', ['discount[note]', ['label' => 'Lý do, Ghi chú', 'value' => '', 'id' => 'discount_note', 'type' => 'textarea']]) ?>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                    Đóng lại
+                </button>
+                <button type="button" class="btn btn-success"
+                        data-value="#discount_value"
+                        data-note="#discount_note"
+                        data-dismiss="modal"
+                        onclick="$(document).trigger('changeDiscount', this)">
+                    Lưu thay đổi.
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <script src="<?= $this->url->get() ?>/assets/js/add_order.js"></script>
+    <script>
+        $(document).ready(function(){
+            order.itemsline = <?= $orderDetail->getItems('JSON') ?>;
+            order.discount = '<?= $orderDetail->get_meta('discount') ?>';
+            order.discount_note = '<?= $orderDetail->get_meta('discount_note') ?>';
+            order.fee = <?= json_encode($orderDetail->get_meta('fee_plus')) ?>;
+            order.init();
+
+            $(document).trigger('loadNotes');
+        });
+        $(document).on('loadNotes', function(event, el){
+            $('#orderNotes').load('<?= $this->url->get(['for' => 'order_notes_ajax']) ?>?order_id=<?= $orderDetail->order_id ?>');
+        });
+
+        $(document).on('addFee', function(event, el){
+            order.addFee(event, el);
+        });
+        $(document).on('changeDiscount', function(event, el){
+            order.changeDiscount(event, el);
+        });
+        $(document).on('refreshTotal', function(){
+            order.reload();
+        });
+        $(document).on('input', '#coupon', function(){
+            $(document).trigger('updateCoupon')
+        });
+    </script>
 
 			</div>
 		</div>

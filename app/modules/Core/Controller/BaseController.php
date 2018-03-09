@@ -52,6 +52,12 @@ class BaseController extends Controller
             if (!$auth) {
                 $auth = $this->cookies->get('AUTH');
                 $auth = @unserialize($auth->getValue());
+
+                if (!$auth) {
+                    $this->response->redirect(array(
+                        'for' => 'auth_login'
+                    ));
+                }
             }
 
             $userModel = User::findFirst(array(
@@ -72,5 +78,13 @@ class BaseController extends Controller
         $this->response->setJsonContent($response);
         $this->response->send();
         exit;
+    }
+
+    public function debugQuery()
+    {
+        $profiles = $this->di->get('profiler')->getProfiles();
+        foreach ($profiles as $profile) {
+            echo "<p><b>". $profile->getTotalElapsedSeconds() ."</b>__", $profile->getSQLStatement(), "</p>";
+        }
     }
 }

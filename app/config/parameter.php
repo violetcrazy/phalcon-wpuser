@@ -8,18 +8,18 @@ $parameter = array(
 			'Plugin' => ROOT . '/plugins/',
 			'Common' => ROOT . '/common/',
 			'Core' => ROOT . '/app/modules/Core/',
-			'User' => ROOT . '/app/modules/User/',
-			'Orders' => ROOT . '/app/modules/Orders/'
+            'Orders' => ROOT . '/app/modules/Orders/',
+            'User' => ROOT . '/app/modules/User/'
 		)
 	),
 	'modules' => array(
-        "user" => array(
-            "className" => 'User\\Module',
-            "path"      => ROOT . '/app/modules/User/Module.php',
-        ),
         "orders" => array(
             "className" => 'Orders\\Module',
             "path"      => ROOT . '/app/modules/Orders/Module.php',
+        ),
+        "user" => array(
+            "className" => 'User\\Module',
+            "path"      => ROOT . '/app/modules/User/Module.php',
         ),
         "core" => array(
             "className" => 'Core\\Module',

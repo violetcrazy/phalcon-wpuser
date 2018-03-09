@@ -13,7 +13,7 @@
             <?= $data['label'] ?>
         </label>
         <?php if ($data['type'] == 'text') { ?>
-            <input class="form-control m-input" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+            <input class="form-control m-input <?= (isset($data['class']) ? $data['class'] : '') ?>" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
         <?php } elseif ($data['type'] == 'number') { ?>
             <input class="form-control m-input" name="<?= $name ?>" type="number" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
         <?php } elseif ($data['type'] == 'textarea') { ?>
@@ -71,8 +71,10 @@
 	<!--begin::Page Snippets -->
 	<script src="<?= $this->url->get() ?>assets/app/js/dashboard.js" type="text/javascript"></script>
 	<!--end::Page Snippets -->
+	<script src="<?= $this->url->get() ?>assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 	<script src="<?= $this->url->get() ?>assets/js/app.js"></script>
 	<script src="<?= $this->url->get() ?>assets/js/nano.js"></script>
+	<script src="<?= $this->url->get() ?>assets/js/jquery.number.min.js"></script>
 	<script src="<?= $this->url->get() ?>assets/js/wnumb-1.1.03/wNumb.js"></script>
 	<script>
         var numberFormat = wNumb({
@@ -206,8 +208,8 @@
 		<button class="m-aside-left-close  m-aside-left-close--skin-dark " id="m_aside_left_close_btn">
 			<i class="la la-close"></i>
 		</button>
+
 		<div id="m_aside_left" class="m-grid__item	m-aside-left  m-aside-left--skin-dark ">
-			<!-- BEGIN: Aside Menu -->
 			<div id="m_ver_menu" class="m-aside-menu  m-aside-menu--skin-dark m-aside-menu--submenu-skin-dark " data-menu-vertical="true"
      data-menu-scrollable="false" data-menu-dropdown-timeout="500">
     <ul class="m-menu__nav  m-menu__nav--dropdown-submenu-arrow ">
@@ -279,10 +281,8 @@
 
     </ul>
 </div>
-			<!-- END: Aside Menu -->
 		</div>
 		<!-- END: Left Aside -->
-
 
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
@@ -290,62 +290,112 @@
                 
     <div class="m-portlet">
         <div class="m-portlet__body">
-            <div class="table-responsive">
-                <?php foreach (range(1, 10) as $i) { ?>
-                <table class="table table-bordered">
-                    <tr data-row="0" class="">
-                        <td>
-                        <span style="width: 40px;">
-                            <label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand">
-                                <input type="checkbox" value="15">
-                                <span></span>
-                            </label>
-                        </span>
-                        </td>
-                        <td>
-                            <span style="width: 150px;"><a href="">0006-3917 - PA</a></span>
-                        </td>
-                        <td>
-                            <h5 class="m--font-danger">
-                                500.000
-                            </h5>
-                        </td>
-                        <td>
-                            <span style="width: 150px;">Trần Quang Minh</span>
-                        </td>
-                        <td>
-                            <span style="width: 110px;">3/10/2017</span>
-                        </td>
-                        <td>
-                            <span style="width: 100px;">
-                                <span class="m-badge  m-badge--success m-badge--wide">Success</span>
-                            </span>
-                        </td>
-                        <td>
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-success m-btn--icon m-btn--icon-only m-btn--pill"
-                               title="Delete">
-                                <i class="la 	la-spinner"></i>
-                            </a>
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-accent m-btn--icon m-btn--icon-only m-btn--pill"
-                               title="Edit details">
-                                <i class="la 	la-chevron-down"></i>
-                            </a>
-                            <a href="#" class="m-portlet__nav-link btn m-btn m-btn--hover-danger m-btn--icon m-btn--icon-only m-btn--pill"
-                               title="Delete">
-                                <i class="la la-close"></i>
-                            </a>
 
-                        </td>
-                    </tr>
+            <div class="topFilter m--margin-bottom-20">
+                <div class="pull-left">
+                    <form action="" class="">
+                        <div class=" m--block-inline">
+                            <select name="" id="" class="form-control">
+                                <option value="">Thao tác</option>
+                                <option value="">Từ chối</option>
+                                <option value="">Xóa</option>
+                            </select>
+                        </div>
+                        <div class=" m--block-inline">
+                            <button class="btn btn-accent">Áp dụng</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div class="pull-right">
+                    <form action="">
+                        <div class=" m--block-inline">
+                            <input type="number" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
+                        </div>
+                        <div class=" m--block-inline">
+                            <input type="number" class="form-control" style="width: 160px" placeholder="Giá nhỏ">
+                        </div>
+                        <div class=" m--block-inline">
+                            <input type="number" class="form-control" style="width: 160px" placeholder="Giá lớn">
+                        </div>
+                        <div class=" m--block-inline">
+                            <select name="" id="" class="form-control">
+                                <option value="">Trạng thái</option>
+                            </select>
+                        </div>
+                        <div class=" m--block-inline">
+                            <button class="btn btn-primary">Áp dụng</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="clearfix"></div>
+            </div>
+
+
+
+            <div class="table-responsive">
+                <table class="table table-bordered">
+                    <?php if ($result->total_items > 0) { ?>
+                        <?php foreach ($result->items as $order) { ?>
+                            <tr data-row="0" class="">
+
+                                <td style="width: 1%">
+                                    <label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand">
+                                        <input type="checkbox" value="15">
+                                        <span></span>
+                                    </label>
+                                </td>
+                                <td width="1%">
+                                    <span class="noenter"><?= $order->getStatusHtml() ?></span>
+                                </td>
+                                <td>
+                                    <span style="width: 150px;">
+                                        <a href="<?= $this->url->get(['for' => 'order_edit', 'id' => $order->order_id]) ?>">
+                                            <b class="m--icon-font-size-lg1">#<?= $order->order_id ?></b> <?= $order->getIp() ?>
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <b class="m--font-danger m--icon-font-size-lg1">
+                                        <?= $this->util->currencyFormat($order->total_price) ?>
+                                    </b>
+                                    (<b class="m--icon-font-size-sm2"><?= $order->total_qty ?></b> sản phẩm)
+                                </td>
+                                <td>
+                                    <a href=""><span><?= $order->customer_name ?></span></a>
+                                </td>
+                                <td>
+                                    <span><?= $this->util->formatDat($order->created_at) ?></span>
+                                </td>
+                                <td class="text-right noenter" width="1%">
+                                    <button class="m-portlet__nav-link btn m-btn m-btn--hover-<?= $this->template->getColorStatusOrder(constant('\Common\Constant::ORDER_STATUS_PROCESSING')) ?> m-btn--icon m-btn--icon-only m-btn--pill"
+                                       title="Delete">
+                                        <i class="la 	la-spinner"></i>
+                                    </button>
+                                    <button class="m-portlet__nav-link btn m-btn m-btn--hover-<?= $this->template->getColorStatusOrder(constant('\Common\Constant::ORDER_STATUS_COMPLETE')) ?> m-btn--icon m-btn--icon-only m-btn--pill"
+                                       title="Edit details">
+                                        <i class="la 	la-chevron-down"></i>
+                                    </button>
+                                    <button class="m-portlet__nav-link btn m-btn m-btn--hover-<?= $this->template->getColorStatusOrder(constant('\Common\Constant::ORDER_STATUS_CANCEL')) ?> m-btn--icon m-btn--icon-only m-btn--pill"
+                                       title="Delete">
+                                        <i class="la la-close"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        <?php } ?>
                     <?php } ?>
                 </table>
             </div>
+
+            <?= $this->template->pagination($result->total_pages, $result->current, 3) ?>
         </div>
     </div>
 
 
 			</div>
 		</div>
+		<div class="clearfix"></div>
+
 	</div>
 	<!-- end:: Body -->
 

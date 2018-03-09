@@ -1,6 +1,6 @@
 {% include 'layout.volt' %}
 
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-aside--offcanvas-default">
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -78,6 +78,10 @@
 				{{ flashSession.output() }}
                 {% block content %}{% endblock %}
 			</div>
+		</div>
+
+		<div class="m-grid__item m-aside-right">
+			{% block content_right %}{% endblock %}
 		</div>
 		<div class="clearfix"></div>
 

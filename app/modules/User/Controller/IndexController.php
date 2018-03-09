@@ -20,6 +20,6 @@ class IndexController extends BaseController
 
     public function profileAction()
     {
-
+        $this->view->pick('user/profile');
     }
 }

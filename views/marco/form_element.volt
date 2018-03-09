@@ -16,7 +16,7 @@
             {{ data['label'] }}
         </label>
         {% if data['type'] == 'text' %}
-            <input class="form-control m-input" name="{{ name }}" type="text" value="{{ data['value'] is defined ? data['value'] : '' }}" id="{{ data['id'] }}">
+            <input class="form-control m-input {{ data['class'] is defined ? data['class'] : '' }}" name="{{ name }}" type="text" value="{{ data['value'] is defined ? data['value'] : '' }}" id="{{ data['id'] }}">
         {% elseif data['type'] == 'number' %}
             <input class="form-control m-input" name="{{ name }}" type="number" value="{{ data['value'] is defined ? data['value'] : '' }}" id="{{ data['id'] }}">
         {% elseif data['type'] == 'textarea' %}

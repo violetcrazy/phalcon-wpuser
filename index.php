@@ -37,15 +37,41 @@ class Bootstrap
 
 	private function initDB()
 	{
+        // Profiler
+        $profiler = new \Phalcon\Db\Profiler();
+        $this->di->set('profiler', $profiler);
+
 		 // Database
-        $db = new \Phalcon\Db\Adapter\Pdo\Mysql([
-            "host"     => $this->config->db->host,
-            "username" => $this->config->db->username,
-            "password" => $this->config->db->password,
-            "dbname"   => $this->config->db->dbname,
-            "charset"  => $this->config->db->charset,
-        ]);
-        $this->di->set('db', $db);
+        $di = $this->di;
+        $config = $this->config;
+
+        $this->di->set('db', function() use ($di, $config){
+            $eventsManager = new Phalcon\Events\Manager();
+            $profiler      = $di->get('profiler');
+
+            $db = new \Phalcon\Db\Adapter\Pdo\Mysql([
+                "host"     => $config->db->host,
+                "username" => $config->db->username,
+                "password" => $config->db->password,
+                "dbname"   => $config->db->dbname,
+                "charset"  => $config->db->charset,
+            ]);
+
+            // Listen all the database events
+            $eventsManager->attach('db', function ($event, $connection) use ($profiler) {
+                if ($event->getType() == 'beforeQuery') {
+                    $profiler->startProfile($connection->getSQLStatement());
+                }
+
+                if ($event->getType() == 'afterQuery') {
+                    $profiler->stopProfile();
+                }
+            });
+
+            $db->setEventsManager($eventsManager);
+
+            return $db;
+        });
 	}
 
 	private function initView()
@@ -120,7 +146,7 @@ class Bootstrap
 
         $this->di->setShared('cookies', function(){
             $cookies = new \Phalcon\Http\Response\Cookies();
-            $cookies->useEncryption(true);
+            $cookies->useEncryption(false);
 
             return $cookies;
         });
@@ -162,7 +188,7 @@ class Bootstrap
                     'controller' => 'error',
                     'action' => 'error404',
                 ));
-                return false;
+//                return false;
             } else {
                 $response->setStatusCode(503, 'Service Unavailable');
                 $di['view']->e = $exception->getMessage();
@@ -171,27 +197,9 @@ class Bootstrap
                     'controller' => 'error',
                     'action' => 'error'
                 ));
-                return false;
+//                return false;
             }
         });
-
-        // Profiler
-        $registry = $di->get('registry');
-        $profiler = new \Phalcon\Db\Profiler();
-        $di->set('profiler', $profiler);
-
-        $eventsManager->attach('db', function ($event, $db) use ($profiler) {
-            if ($event->getType() == 'beforeQuery') {
-                $profiler->startProfile($db->getSQLStatement());
-            }
-            if ($event->getType() == 'afterQuery') {
-                $profiler->stopProfile();
-            }
-        });
-
-        $db = $di->get('db');
-        $db->setEventsManager($eventsManager);
-        $di->set('db', $db);
 
         $dispatcher->setEventsManager($eventsManager);
         $di->set('dispatcher', $dispatcher);
@@ -322,6 +330,16 @@ class Bootstrap
         $this->initUrl();
         $this->iniSession();
         $this->initView();
+
+        $this->di->setShared('util', function(){
+            return new \Common\Util();
+        });
+        $this->di->setShared('template', function(){
+            return new \Common\Template();
+        });
+        $this->di->setShared('constant', function(){
+            return new \Common\Constant();
+        });
 
 		// Application
         $application = new \Phalcon\Mvc\Application();

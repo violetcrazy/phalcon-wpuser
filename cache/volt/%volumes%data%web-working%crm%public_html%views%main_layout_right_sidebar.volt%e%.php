@@ -1,4 +1,4 @@
-<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
+a:5:{i:0;s:15881:"<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
     <div class="form-group m-form__group row">
         <label for="<?= $data['id'] ?>" class="col-3 col-form-label">
             <?= $data['label'] ?>
@@ -13,7 +13,7 @@
             <?= $data['label'] ?>
         </label>
         <?php if ($data['type'] == 'text') { ?>
-            <input class="form-control m-input <?= (isset($data['class']) ? $data['class'] : '') ?>" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
+            <input class="form-control m-input" name="<?= $name ?>" type="text" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
         <?php } elseif ($data['type'] == 'number') { ?>
             <input class="form-control m-input" name="<?= $name ?>" type="number" value="<?= (isset($data['value']) ? $data['value'] : '') ?>" id="<?= $data['id'] ?>">
         <?php } elseif ($data['type'] == 'textarea') { ?>
@@ -71,10 +71,8 @@
 	<!--begin::Page Snippets -->
 	<script src="<?= $this->url->get() ?>assets/app/js/dashboard.js" type="text/javascript"></script>
 	<!--end::Page Snippets -->
-	<script src="<?= $this->url->get() ?>assets/demo/default/custom/components/forms/widgets/select2.js" type="text/javascript"></script>
 	<script src="<?= $this->url->get() ?>assets/js/app.js"></script>
 	<script src="<?= $this->url->get() ?>assets/js/nano.js"></script>
-	<script src="<?= $this->url->get() ?>assets/js/jquery.number.min.js"></script>
 	<script src="<?= $this->url->get() ?>assets/js/wnumb-1.1.03/wNumb.js"></script>
 	<script>
         var numberFormat = wNumb({
@@ -84,7 +82,7 @@
 	</script>
 </head>
 
-<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-footer--push m-aside--offcanvas-default">
+<body class="m-page--fluid m--skin- m-content--skin-light2 m-header--fixed m-header--fixed-mobile m-aside-left--enabled m-aside-left--skin-dark m-aside-left--offcanvas m-aside--offcanvas-default">
 <!-- begin:: Page -->
 <div class="m-grid m-grid--hor m-grid--root m-page">
 	<!-- BEGIN: Header -->
@@ -287,134 +285,12 @@
 		<div class="m-grid__item m-grid__item--fluid m-wrapper">
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
-                
-    <div class="m-portlet">
-        <div class="m-portlet__body  m-portlet__body--no-padding">
-            <div class="row m-row--no-padding m-row--col-separator-xl">
-                <div class="col-xl-4">
-                    <!--begin:: Widgets/Stats2-1 -->
-                    <div class="m-widget1">
-                        <div class="m-widget1__item">
-                            <div class="row m-row--no-padding align-items-center">
-                                <div class="col">
-                                    <h3 class="m-widget1__title">
-                                        Member Profit
-                                    </h3>
-                                    <span class="m-widget1__desc">
-															Awerage Weekly Profit
-														</span>
-                                </div>
-                                <div class="col m--align-right">
-														<span class="m-widget1__number m--font-brand">
-															+$17,800
-														</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-widget1__item">
-                            <div class="row m-row--no-padding align-items-center">
-                                <div class="col">
-                                    <h3 class="m-widget1__title">
-                                        Orders
-                                    </h3>
-                                    <span class="m-widget1__desc">
-															Weekly Customer Orders
-														</span>
-                                </div>
-                                <div class="col m--align-right">
-														<span class="m-widget1__number m--font-danger">
-															+1,800
-														</span>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="m-widget1__item">
-                            <div class="row m-row--no-padding align-items-center">
-                                <div class="col">
-                                    <h3 class="m-widget1__title">
-                                        Issue Reports
-                                    </h3>
-                                    <span class="m-widget1__desc">
-															System bugs and issues
-														</span>
-                                </div>
-                                <div class="col m--align-right">
-														<span class="m-widget1__number m--font-success">
-															-27,49%
-														</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end:: Widgets/Stats2-1 -->
-                </div>
-                <div class="col-xl-4">
-                    <!--begin:: Widgets/Daily Sales-->
-                    <div class="m-widget14">
-                        <div class="m-widget14__header m--margin-bottom-30">
-                            <h3 class="m-widget14__title">
-                                Daily Sales
-                            </h3>
-                            <span class="m-widget14__desc">
-													Check out each collumn for more details
-												</span>
-                        </div>
-                        <div class="m-widget14__chart" style="height:120px;">
-                            <canvas  id="m_chart_daily_sales"></canvas>
-                        </div>
-                    </div>
-                    <!--end:: Widgets/Daily Sales-->
-                </div>
-                <div class="col-xl-4">
-                    <!--begin:: Widgets/Profit Share-->
-                    <div class="m-widget14">
-                        <div class="m-widget14__header">
-                            <h3 class="m-widget14__title">
-                                Profit Share
-                            </h3>
-                            <span class="m-widget14__desc">
-													Profit Share between customers
-												</span>
-                        </div>
-                        <div class="row  align-items-center">
-                            <div class="col">
-                                <div id="m_chart_profit_share" class="m-widget14__chart" style="height: 160px">
-                                    <div class="m-widget14__stat">
-                                        45
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col">
-                                <div class="m-widget14__legends">
-                                    <div class="m-widget14__legend">
-                                        <span class="m-widget14__legend-bullet m--bg-accent"></span>
-                                        <span class="m-widget14__legend-text">
-																37% Sport Tickets
-															</span>
-                                    </div>
-                                    <div class="m-widget14__legend">
-                                        <span class="m-widget14__legend-bullet m--bg-warning"></span>
-                                        <span class="m-widget14__legend-text">
-																47% Business Events
-															</span>
-                                    </div>
-                                    <div class="m-widget14__legend">
-                                        <span class="m-widget14__legend-bullet m--bg-brand"></span>
-                                        <span class="m-widget14__legend-text">
-																19% Others
-															</span>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <!--end:: Widgets/Profit Share-->
-                </div>
-            </div>
-        </div>
-    </div>
-
+                ";s:7:"content";N;i:1;s:67:"
 			</div>
+		</div>
+
+		<div class="m-grid__item m-aside-right">
+			";s:13:"content_right";N;i:2;s:134:"
 		</div>
 		<div class="clearfix"></div>
 
@@ -426,4 +302,4 @@
 <!-- end::Body -->
 </body>
 
-</html>
+</html>";}
