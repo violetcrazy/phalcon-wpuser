@@ -37,7 +37,7 @@
                                 Người phụ trách
                             </label>
                             <div class="">
-                                <select class="form-control selectCskh" id="" name="param">
+                                <select class="form-control selectCskh" id="" name="param" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
                                     <option></option>
                                 </select>
                             </div>

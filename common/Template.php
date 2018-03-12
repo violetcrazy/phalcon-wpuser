@@ -48,4 +48,32 @@ class Template {
 
         return $html;
     }
+
+    public function openPortlet($args)
+    {
+        $html = '';
+        $html .= "<div class='m-portlet m-portlet--mobile'>";
+        if (isset($args['title'])){
+
+            $html .= "<div class='m-portlet__head'>";
+            $html .= "<div class='m-portlet__head-caption'>";
+            $html .= "<div class='m-portlet__head-title'>";
+            $html .= "<h3 class='m-portlet__head-text'>";
+            $html .= $args['title'];
+
+            if (isset($args['sub_title'])) {
+                $html .= "<small>{$args['sub_title']}</small>";
+            }
+
+            $html .= "</h3></div></div></div>";
+        }
+
+        $html .= "<div class='m-portlet__body'>";
+
+        return $html;
+    }
+
+    public function closePortlet(){
+        return '</div>';
+    }
 }

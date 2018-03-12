@@ -1,6 +1,8 @@
 <?php
 namespace User\Model;
 
+use Common\Constant;
+use Common\Util;
 use Orders\Model\OrdersItem;
 use Phalcon\Validation;
 use Phalcon\Validation\Validator\Uniqueness as UniquenessValidator;
@@ -17,6 +19,8 @@ class User extends Model
     public $user_registered;
     public $user_activation_key;
     public $user_status;
+    public $user_phone;
+    public $user_address;
     public $display_name;
     public $metas;
 
@@ -25,6 +29,42 @@ class User extends Model
         $this->setSource('wp_users');
     }
 
+    public function beforeValidationOnUpdate()
+    {
+        $this->beforeValidationOnCreate();
+    }
+    public function beforeValidationOnCreate()
+    {
+        $currentTime = time();
+
+        $this->user_registered = $currentTime;
+
+        if ($this->user_login == '') {
+            $this->user_login  = $this->user_email;
+        }
+        if ($this->user_pass == '') {
+            $this->user_pass = md5(uniqid());
+        }
+
+        $nameSlug = Util::slug($this->display_name);
+        if ($this->user_nicename == '' || $this->user_nicename != $nameSlug) {
+            $this->user_nicename = $nameSlug;
+        }
+    }
+
+    public function update_meta($key, $value)
+    {
+        $role = $this->getMeta($key);
+        $meta = UserMeta::findFirst("user_id = '{$this->ID}' AND  meta_key = '{$key}' AND meta_value = '{$value}'");
+        if (!$meta) {
+            $meta = new UserMeta();
+            $meta->user_id = $this->ID;
+            $meta->meta_key = $key;
+            $meta->meta_value = $value;
+
+            $meta->create();
+        }
+    }
 
     public function getPublicInfo()
     {
@@ -37,14 +77,16 @@ class User extends Model
             'user_registered' => $this->user_registered,
             'user_activation_key' => $this->user_activation_key,
             'user_status' => $this->user_status,
-            'display_name  ' => $this->display_name,
+            'display_name' => $this->display_name,
+            'phone' => $this->user_phone,
+            'address' => $this->user_address,
             'meta' => $this->getMeta()
         );
 
         return $output;
     }
 
-    public function getMeta($key = '')
+    public function getMeta($meta_key = '', $single = true)
     {
         $output = array();
 
@@ -66,15 +108,37 @@ class User extends Model
             }
         }
 
-        if (!empty(trim($key))) {
-            if (isset($this->metas[$key][0])) {
-                return $this->metas[$key][0];
+        if (!empty(trim($meta_key))) {
+            if (isset($this->metas[$meta_key][0])) {
+                if ($single) {
+                    return $this->metas[$meta_key][0];
+                } else {
+                    return $this->metas[$meta_key];
+                }
             } else {
-                return false;
+                return '';
             }
         } else {
             return $this->metas;
         }
+    }
+
+    public function getAddress()
+    {
+        if ($this->user_address == '') {
+            $this->user_address = $this->getMeta('billing_address');
+            $this->update();
+        }
+        return $this->user_address;
+    }
+
+    public function getPhone()
+    {
+        if ($this->user_phone == '') {
+            $this->user_phone = $this->getMeta('billing_phone');
+            $this->update();
+        }
+        return $this->user_phone;
     }
 
     public function getName()
@@ -86,13 +150,23 @@ class User extends Model
         }
     }
 
+    public function getEmail()
+    {
+        if (!empty($this->user_email)) {
+            return $this->user_email;
+        } else {
+            return $this->user_login;
+        }
+    }
+
     public function getAvatar()
     {
         if ($this->getMeta('avatar')) {
             return $this->getMeta('avatar');
         } else {
             $email = trim( $this->user_email );
-            return "https://www.gravatar.com/avatar/{$email}";
+            $url = "https://www.gravatar.com/avatar/{$email}";
+            return $url;
         }
     }
 
@@ -135,5 +209,36 @@ class User extends Model
 
             $userAdress->create();
         }
+    }
+
+
+    public function getLabelHtml()
+    {
+        $labels = $this->getMeta('label');
+        $output = array();
+        if (is_array($labels)) {
+            foreach ($labels as $label) {
+                $status = Constant::getUserLabel($label);
+                if ($status) {
+                    $output[] = "<span class='{$status['class']}'>{$status['label']}</span>";
+                }
+            }
+        }
+
+        return implode(' ', $output);
+    }
+
+    public function getSchemaApi()
+    {
+        $output = array(
+            'ID' => (int)$this->ID,
+            'name' => $this->getName(),
+            'email' => $this->getEmail(),
+            'phone' => $this->user_phone,
+            'address' => $this->getAddress(),
+            'role' => $this->getMeta('role', false)
+        );
+
+        return $output;
     }
 }

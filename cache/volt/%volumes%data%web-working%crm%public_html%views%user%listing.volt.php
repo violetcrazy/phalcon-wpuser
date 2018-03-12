@@ -288,107 +288,84 @@
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
                 
-
-    <?= $this->template->openPortlet(['title' => 'Các đơn hàng', 'sub_title' => 'Tổng cộng <b>500</b> đơn hàng']) ?>
-        <div class="topFilter m--margin-bottom-20">
-            <div class="pull-left">
-                <form action="" class="">
-                    <div class=" m--block-inline">
-                        <select name="" id="" class="form-control">
-                            <option value="">Thao tác</option>
-                            <option value="">Từ chối</option>
-                            <option value="">Xóa</option>
-                        </select>
-                    </div>
-                    <div class=" m--block-inline">
-                        <button class="btn btn-accent">Áp dụng</button>
-                    </div>
-                </form>
+    <div class=" m--margin-bottom-20">
+        <a href="" class="btn btn-accent m-btn m-btn--icon">
+            <span>
+                <i class="fa flaticon-add-circular-button"></i>
+                <span>Thêm người dùng</span>
+            </span>
+        </a>
+    </div>
+    <div class="m-portlet m-portlet--full-height ">
+        <div class="m-portlet__head">
+            <div class="m-portlet__head-caption">
+                <div class="m-portlet__head-title">
+                    <h3 class="m-portlet__head-text">
+                        Danh sách người dùng
+                    </h3>
+                </div>
             </div>
+            <div class="m-portlet__head-tools">
 
-            <div class="pull-right">
-                <form action="">
-                    <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
-                    </div>
-                    <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="Giá nhỏ">
-                    </div>
-                    <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="Giá lớn">
-                    </div>
-                    <div class=" m--block-inline">
-                        <select name="" id="" class="form-control">
-                            <option value="">Trạng thái</option>
+                <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
+                    <li class="nav-item m-tabs__item">
+                        <input type="text" style="width: 150px;" class="form-control">
+                    </li>
+                    <li class="nav-item m-tabs__item">
+                        <select name="" style="width: 150px" id="" class="form-control">
+                            <option value="">Chọn vai trò</option>
                         </select>
-                    </div>
-                    <div class=" m--block-inline">
-                        <button class="btn btn-primary">Áp dụng</button>
-                    </div>
-                </form>
+                    </li>
+                    <li class="nav-item m-tabs__item">
+                        <select name="" style="width: 150px" id="" class="form-control">
+                            <option value="">Chọn Nhãn khách hàng</option>
+                        </select>
+                    </li>
+                    <li class="nav-item m-tabs__item">
+                        <button class="btn btn-success">Tìm kiếm</button>
+                    </li>
+                </ul>
             </div>
-            <div class="clearfix"></div>
         </div>
+        <div class="m-portlet__body">
+            <div class="tab-content">
+                <div class="tab-pane active" id="m_widget4_tab1_content">
+                    <!--begin::Widget 14-->
+                    <div class="m-widget4">
+                        <?php foreach ($users->result as $user) { ?>
+                            <!--begin::Widget 14 Item-->
 
+                            <div class="m-widget4__item">
+                                <div class="m-widget4__img m-widget4__img--pic">
+                                    <a href="<?= $this->url->get(['for' => 'user_profile_edit', 'id' => $user->ID]) ?>">
+                                        <img src="<?= $user->getAvatar() ?>" alt="">
 
-
-        <div class="table-responsive">
-            <table class="table table-bordered">
-                <?php if ($result->total_items > 0) { ?>
-                    <?php foreach ($result->items as $order) { ?>
-                        <tr data-row="0" class="">
-
-                            <td style="width: 1%">
-                                <label class="m-checkbox m-checkbox--single m-checkbox--solid m-checkbox--brand">
-                                    <input type="checkbox" value="15">
-                                    <span></span>
-                                </label>
-                            </td>
-                            <td width="1%">
-                                <span class="noenter"><?= $order->getStatusHtml() ?></span>
-                            </td>
-                            <td>
-                                        <span style="width: 150px;">
-                                            <a href="<?= $this->url->get(['for' => 'order_edit', 'id' => $order->order_id]) ?>">
-                                                <b class="m--icon-font-size-lg1">#<?= $order->order_id ?></b> <?= $order->getIp() ?>
-                                            </a>
+                                    </a>
+                                </div>
+                                <div class="m-widget4__info">
+                                    <a href="<?= $this->url->get(['for' => 'user_profile_edit', 'id' => $user->ID]) ?>">
+                                        <span class="m-widget4__title">
+                                        #<?= $user->ID ?> <?= $user->getName() ?>
                                         </span>
-                            </td>
-                            <td>
-                                <b class="m--font-danger m--icon-font-size-lg1">
-                                    <?= $this->util->currencyFormat($order->total_price) ?>
-                                </b>
-                                (<b class="m--icon-font-size-sm2"><?= $order->total_qty ?></b> sản phẩm)
-                            </td>
-                            <td>
-                                <a href=""><span><?= $order->customer_name ?></span></a>
-                            </td>
-                            <td>
-                                <span><?= $this->util->formatDat($order->created_at) ?></span>
-                            </td>
-                            <td class="text-right noenter" width="1%">
-                                <button class="m-portlet__nav-link btn m-btn m-btn--hover-<?= $this->template->getColorStatusOrder(constant('\Common\Constant::ORDER_STATUS_PROCESSING')) ?> m-btn--icon m-btn--icon-only m-btn--pill"
-                                        title="Delete">
-                                    <i class="la 	la-spinner"></i>
-                                </button>
-                                <button class="m-portlet__nav-link btn m-btn m-btn--hover-<?= $this->template->getColorStatusOrder(constant('\Common\Constant::ORDER_STATUS_COMPLETE')) ?> m-btn--icon m-btn--icon-only m-btn--pill"
-                                        title="Edit details">
-                                    <i class="la 	la-chevron-down"></i>
-                                </button>
-                                <button class="m-portlet__nav-link btn m-btn m-btn--hover-<?= $this->template->getColorStatusOrder(constant('\Common\Constant::ORDER_STATUS_CANCEL')) ?> m-btn--icon m-btn--icon-only m-btn--pill"
-                                        title="Delete">
-                                    <i class="la la-close"></i>
-                                </button>
-                            </td>
-                        </tr>
-                    <?php } ?>
-                <?php } ?>
-            </table>
+                                    </a>
+                                    <br>
+                                    <span class="m-widget4__sub">
+                                    <?= $user->getEmail() ?>
+                                </span>
+                                </div>
+                                <div class="m-widget4__ext">
+                                    <?= $user->getLabelHtml() ?>
+                                </div>
+                            </div>
+                            <!--end::Widget 14 Item-->
+                        <?php } ?>
+
+                    </div>
+                    <!--end::Widget 14-->
+                </div>
+            </div>
         </div>
-
-        <?= $this->template->pagination($result->total_pages, $result->current, 3) ?>
-    <?= $this->template->closePortlet() ?>
-
+    </div>
 
 			</div>
 		</div>

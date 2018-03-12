@@ -56,18 +56,9 @@ class SingleController extends BaseController
 
                 }
 
-
-
-                if (isset($billing['customer_id'])) {
-                    $orderDetail->customer_id = $billing['customer_id'];
-                }
-                $orderDetail->customer_email = $billing['email'];
-                $orderDetail->customer_phone = $billing['phone'];
-                $orderDetail->customer_name = $billing['name'];
-                $orderDetail->customer_address = $billing['address'];
+                $customer = $this->checkCustomer($orderDetail);
 
                 $orderDetail->saveShippingCustomer($shipping);
-
 
                 foreach ($orderItems as $item) {
                     $item->delete();
@@ -215,36 +206,15 @@ class SingleController extends BaseController
             $orderRequest = json_decode($orderRequest, true);
         }
 
-        $customer = UserHelper::getUserByPhoneEmail($billing['phone'], $billing['email']);
-        if (!$customer) {
-            $customer = new User();
-            $customer->display_name = $billing['name'];
-            $customer->user_nicename = $billing['name'];
-            $customer->user_login = $billing['email'];
-            $customer->user_email = $billing['email'];
-            $customer->user_pass = md5(uniqid());
-            $customer->user_status = 0;
-
-            if (!$customer->create()){
-                $messs = $customer->getMessages();
-                foreach ($messs as $m) {
-                    $this->flashSession->error($m->getMessage());
-                }
-            }
-        }
-
-
-
         $order = new Orders();
 
+        $customer = $this->checkCustomer($order);
+
+        $order->saler_id = $this->userCurrent->ID;
         $order->total_price = 0;
         $order->total_qty = 0;
         $order->ip = $this->request->getClientAddress();
-        $order->customer_id = $customer->ID;
-        $order->customer_email = $customer->user_email;
-        $order->customer_phone = $billing['phone'];
-        $order->customer_name = $billing['name'];
-        $order->customer_address = $billing['address'];
+
         $order->status = Constant::ORDER_STATUS_DEFAULT;
         $order->updated_by = $this->userCurrent->ID;
         $order->created_by = $this->userCurrent->ID;
@@ -259,7 +229,6 @@ class SingleController extends BaseController
                 if (count($orderRequest['itemsline']) > 0) {
                     foreach ($orderRequest['itemsline'] as $product) {
                         $total = $product['price'] * $product['qty'];
-
 
                         $orderItem = new OrdersItem();
                         $orderItem->order_id = $order->order_id;
@@ -318,5 +287,44 @@ class SingleController extends BaseController
                 ));
             }
         }
+    }
+
+    public function checkCustomer(&$order)
+    {
+        $billing = $this->request->getPost('billing');
+
+        $customer = User::findFirst("
+        (user_phone = '{$billing['phone']}' AND user_email = '{$billing['email']}') 
+        OR (user_phone = '{$billing['phone']}') 
+        OR (user_email = '{$billing['email']}')");
+
+        if (!$customer) {
+            $customer = new User();
+            $customer->display_name = $billing['name'];
+            $customer->user_nicename = $billing['name'];
+            $customer->user_login = $billing['email'];
+            $customer->user_email = $billing['email'];
+            $customer->user_pass = md5(uniqid());
+            $customer->user_phone = $billing['phone'];
+            $customer->user_address = $billing['address'];
+            $customer->user_status = 0;
+
+            if (!$customer->create()){
+                $messs = $customer->getMessages();
+                foreach ($messs as $m) {
+                    $this->flashSession->error($m->getMessage());
+                }
+            }
+        }
+
+        $customer->update_meta('role', Constant::USER_MEMBER_CUSTOMER);
+
+        $order->customer_id = $customer->ID;
+        $order->customer_email = $customer->user_email;
+        $order->customer_phone = $customer->getPhone();
+        $order->customer_name = $customer->getName();
+        $order->customer_address = $customer->getAddress();
+
+        return $customer;
     }
 }
