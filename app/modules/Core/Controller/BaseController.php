@@ -32,6 +32,7 @@ class BaseController extends Controller
                 }
             }
         }
+        
         $this->view->main_menu = $menus;
     }
 

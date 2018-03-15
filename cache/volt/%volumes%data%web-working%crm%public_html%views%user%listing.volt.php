@@ -274,9 +274,22 @@
 
         <li class="m-menu__section">
             <h4 class="m-menu__section-text">
-                Components
+                Quick Action
             </h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+
+        <li class="m-menu__item">
+            <a href="#" class="m-menu__link ">
+                <i class="m-menu__link-icon flaticon-user-add"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Tạo Tài khoản
+                        </span>
+                    </span>
+                </span>
+            </a>
         </li>
 
     </ul>
@@ -288,6 +301,9 @@
 			<div class="m-content">
 				<?= $this->flashSession->output() ?>
                 
+
+
+
     <div class=" m--margin-bottom-20">
         <a href="" class="btn btn-accent m-btn m-btn--icon">
             <span>

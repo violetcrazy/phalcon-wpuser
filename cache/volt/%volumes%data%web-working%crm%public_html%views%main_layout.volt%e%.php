@@ -1,4 +1,4 @@
-a:3:{i:0;s:16164:"<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
+a:3:{i:0;s:16638:"<?php $this->_macros['formGroupText'] = function($__p = null) { if (isset($__p[0])) { $name = $__p[0]; } else { if (isset($__p["name"])) { $name = $__p["name"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: name");  } } if (isset($__p[1])) { $data = $__p[1]; } else { if (isset($__p["data"])) { $data = $__p["data"]; } else {  throw new \Phalcon\Mvc\View\Exception("Macro 'formGroupText' was called without parameter: data");  } }  ?>
     <div class="form-group m-form__group row">
         <label for="<?= $data['id'] ?>" class="col-3 col-form-label">
             <?= $data['label'] ?>
@@ -274,9 +274,22 @@ a:3:{i:0;s:16164:"<?php $this->_macros['formGroupText'] = function($__p = null) 
 
         <li class="m-menu__section">
             <h4 class="m-menu__section-text">
-                Components
+                Quick Action
             </h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+
+        <li class="m-menu__item">
+            <a href="#" class="m-menu__link ">
+                <i class="m-menu__link-icon flaticon-user-add"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Tạo Tài khoản
+                        </span>
+                    </span>
+                </span>
+            </a>
         </li>
 
     </ul>

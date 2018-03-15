@@ -3,9 +3,11 @@
 {% block content %}
 
     {{ template.openPortlet({"title": "Các đơn hàng", "sub_title": "Tổng cộng <b>500</b> đơn hàng"}) }}
+
         <div class="topFilter m--margin-bottom-20">
-            <div class="pull-left">
-                <form action="" class="">
+            <form action="" class="">
+                <div class="pull-left">
+
                     <div class=" m--block-inline">
                         <select name="" id="" class="form-control">
                             <option value="">Thao tác</option>
@@ -16,30 +18,42 @@
                     <div class=" m--block-inline">
                         <button class="btn btn-accent">Áp dụng</button>
                     </div>
-                </form>
-            </div>
+                </div>
 
-            <div class="pull-right">
-                <form action="">
+                <div class="pull-right">
                     <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
+                        <input type="number" value="{{ request.getQuery('order_id', ['int'], '') }}" name="order_id" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
+                    </div>
+
+                    <div class=" m--block-inline">
+                        <select name="date_range" id="" class="form-control" onchange="form.submit()">
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "" ? "selected" : "" }} value="">Chọn ngày</option>
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "now" ? "selected" : "" }} value="now">Trong ngày</option>
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "star_week" ? "selected" : "" }} value="star_week">Từ thứ 2</option>
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "star_month" ? "selected" : "" }} value="star_month">Từ đầu tháng (ngày 1)</option>
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "7dayago" ? "selected" : "" }} value="7dayago">7 ngày trước</option>
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "15dayago" ? "selected" : "" }} value="15dayago">15 ngày trước</option>
+                            <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "30dayago" ? "selected" : "" }} value="30dayago">30 ngày trước</option>
+                        </select>
+                    </div>
+
+                    <div class=" m--block-inline">
+                        <select name="status" id="" class="form-control" onchange="form.submit()">
+                            {{ template.optionsStatusOrder(request.getQuery('status')) }}
+                        </select>
                     </div>
                     <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="Giá nhỏ">
-                    </div>
-                    <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="Giá lớn">
-                    </div>
-                    <div class=" m--block-inline">
-                        <select name="" id="" class="form-control">
-                            <option value="">Trạng thái</option>
+                        <select name="sort" id="" class="form-control" onchange="form.submit()">
+                            <option value="">Sắp xếp</option>
+                            <option {{ request.getQuery('sort', ['striptags', 'trim'], '') == "create" ? "selected" : "" }} value="create">Ngày tạo</option>
+                            <option {{ request.getQuery('sort', ['striptags', 'trim'], '') == "update" ? "selected" : "" }} value="update">Ngày cập nhật</option>
                         </select>
                     </div>
                     <div class=" m--block-inline">
                         <button class="btn btn-primary">Áp dụng</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
             <div class="clearfix"></div>
         </div>
 
@@ -100,6 +114,7 @@
         </div>
 
         {{ template.pagination(result.total_pages , result.current, 3) }}
+
     {{ template.closePortlet() }}
 
 {% endblock %}

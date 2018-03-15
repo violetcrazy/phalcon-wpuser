@@ -8,9 +8,11 @@
       <library name="PHP" type="php">
         <CLASSES>
           <root url="file://$MODULE_DIR$/../../../resource/phalconDebug" />
+          <root url="file://$MODULE_DIR$/../../wordpress/w1" />
         </CLASSES>
         <SOURCES>
           <root url="file://$MODULE_DIR$/../../../resource/phalconDebug" />
+          <root url="file://$MODULE_DIR$/../../wordpress/w1" />
         </SOURCES>
       </library>
     </orderEntry>

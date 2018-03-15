@@ -274,9 +274,22 @@
 
         <li class="m-menu__section">
             <h4 class="m-menu__section-text">
-                Components
+                Quick Action
             </h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+
+        <li class="m-menu__item">
+            <a href="#" class="m-menu__link ">
+                <i class="m-menu__link-icon flaticon-user-add"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Tạo Tài khoản
+                        </span>
+                    </span>
+                </span>
+            </a>
         </li>
 
     </ul>
@@ -291,6 +304,7 @@
 
     <form action="" class="formMain" method="post">
         <div class="m-portlet--head-solid-bg m-portlet m-portlet--mobile m-portlet--<?= $this->template->getColorStatusOrder($orderDetail->status) ?>">
+
             <div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
@@ -305,38 +319,56 @@
                     </div>
                     <div>
                         <b class="m--icon-font-size-lg1"><?= $this->util->currencyFormat($orderDetail->total_price) ?></b>
-                        <span class="m--icon-font-size-sm2"> - Thanh toán tiền mặt khi nhận đuược hàng</span>
+                        <span class="m--icon-font-size-sm2"> - <?= $orderDetail->payment_title ?></span>
                     </div>
                 </div>
 
                 <div class="m-portlet__head-tools">
-                    <select onchange="form.submit()" class="form-control m-input m-input--square" id="" name="order_status">
-                        <?= $this->template->optionsStatusOrder($orderDetail->status) ?>
-                    </select>
+                    <?php if ($orderDetail->order_id > 0) { ?>
+                        <select onchange="form.submit()" class="form-control m-input m-input--square" id="" name="order_status">
+                            <?= $this->template->optionsStatusOrder($orderDetail->status) ?>
+                        </select>
+                    <?php } ?>
                 </div>
 
             </div>
+
             <div class="m-portlet__body">
                 <div class="row">
                     <div class="col-lg-5">
-                        <div class="form-group m-form__group">
-                            <label class="col-form-label">
-                                Người phụ trách
+                        <div class="form-group m-form__group row">
+                            <label for="user_name" class="col-3 col-form-label">
+                                CSKH
                             </label>
-                            <div class="">
-                                <select class="form-control selectCskh" id="" name="param" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
-                                    <option></option>
+
+                            <div class="col-9">
+                                <select <?= ($orderDetail->status != constant('\Common\Constant::ORDER_STATUS_DEFAULT') ? 'disabled' : '') ?> class="form-control selectCskh" id="" name="seller_id" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
+                                    <?php if (($seller)) { ?>
+                                        <option value="<?= $seller['ID'] ?>"><?= $seller['name'] ?> - <?= $seller['phone'] ?> - <?= $seller['address'] ?></option>
+                                    <?php } ?>
                                 </select>
                             </div>
                         </div>
 
-                        <h5><b>Người mua</b></h5>
-                        <?= $this->callMacro('formGroupText', ['billing[name]', ['label' => 'Họ & tên', 'value' => $orderDetail->getBilling('name'), 'id' => 'user_name']]) ?>
-                        <?= $this->callMacro('formGroupText', ['billing[phone]', ['label' => 'Điện thoại', 'value' => $orderDetail->getBilling('phone'), 'id' => 'user_phone']]) ?>
-                        <?= $this->callMacro('formGroupText', ['billing[email]', ['label' => 'Email', 'value' => $orderDetail->getBilling('email'), 'id' => 'user_email']]) ?>
-                        <?= $this->callMacro('formGroupText', ['billing[address]', ['label' => 'Địa chỉ', 'value' => $orderDetail->getBilling('address'), 'id' => 'user_address']]) ?>
+                        <div class="form-group m-form__group row">
+                            <label for="user_name" class="col-3 col-form-label">
+                                <b>Người mua</b>
+                            </label>
 
-                        <h5 class=""><b>Người nhận</b></h5>
+                            <div class="col-9">
+                                <select <?= ($orderDetail->status != constant('\Common\Constant::ORDER_STATUS_DEFAULT') ? 'disabled' : '') ?>  class="form-control selectCskh" id="" name="customer_id" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
+                                    <?php if (($seller)) { ?>
+                                        <option value="<?= $customer['ID'] ?>"><?= $customer['name'] ?> - <?= $customer['phone'] ?> - <?= $customer['address'] ?></option>
+                                    <?php } ?>
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <h5 class="text-right"><b>Thanh toán</b></h5>
+                        <?= $orderForm->renderDecoratedInline('payment_title') ?>
+                        <?= $orderForm->renderDecoratedInline('payment_status') ?>
+                        <hr>
+                        <h5 class="text-right"><b>Người nhận</b></h5>
                         <?= $this->callMacro('formGroupText', ['shipping[name]', ['label' => 'Họ & tên', 'value' => $orderDetail->getShipping('name'), 'id' => 'user_name']]) ?>
                         <?= $this->callMacro('formGroupText', ['shipping[phone]', ['label' => 'Điện thoại', 'value' => $orderDetail->getShipping('phone'), 'id' => 'user_phone']]) ?>
                         <?= $this->callMacro('formGroupText', ['shipping[email]', ['label' => 'Email', 'value' => $orderDetail->getShipping('email'), 'id' => 'user_email']]) ?>
@@ -370,6 +402,37 @@
     <br>
 
     <table class="table tableExcel">
+        <tbody id="">
+        <tr class="rowExcel">
+            <td colspan="2">
+                <input type="text"
+                       class="js_product_name "
+                       placeholder="Tên sản phẩm"
+                       onblur="setTimeout(function(){$('.resultProducts').html('')}, 100)"
+                       oninput="order.findProduct(event, this)"
+                       data-url="<?= $this->url->get(['for' => 'wp_ajax_list']) ?>"
+                       data-result=".resultProducts">
+
+                <div class="resultProducts">
+
+                </div>
+
+            </td>
+            <td width="20%">
+                <input type="text" class="js_product_price formatCurrency" placeholder="Giá"></td>
+            <td width="10%">
+                <input type="number" class="js_product_qty" value="1">
+                <button
+                        type="button"
+                        class="btn btn-add-row" onclick="order.addProduct(event, '#itemsLine')">
+                    <span class="fa fa-plus"></span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered tableExcel m-table m-table--head-bg-accent">
         <thead>
         <tr>
             <th>Tên sản phẩm</th>
@@ -384,24 +447,7 @@
         </tbody>
     </table>
 
-    <table class="table tableExcel">
-        <tbody id="">
-        <tr class="rowExcel">
-            <td colspan="2">
-                <input type="text" class="js_product_name" placeholder="Tên sản phẩm"></td>
-            <td width="20%">
-                <input type="text" class="js_product_price formatCurrency" placeholder="Giá"></td>
-            <td width="10%">
-                <input type="number" class="js_product_qty" value="1">
-                <button
-                        type="button"
-                        class="btn btn-add-row" onclick="order.addProduct(event, '#itemsLine')">
-                    <span class="fa fa-plus"></span>
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
 </div>
 
 
@@ -438,6 +484,31 @@
         </tr>
         </tbody>
     </table>
+
+
+    <div id="templateWidget4">
+
+            <a href="javascript:;" class="m-widget4__item" onclick="order.addProductByJson(event, this)">
+                <div class="m-widget4__img m-widget4__img--logo" style="width: 50px; min-height: 40px;">
+                    <img src="{image}" alt="" >
+                </div>
+                <div class="m-widget4__info">
+                                <span class="m-widget4__title">
+                                    {name}
+                                </span>
+                    <span class="jsondata m--hide">{jsondata}</span>
+                    <br>
+                    <span class="m-widget4__sub">
+                                    {desc}
+                                </span>
+                </div>
+                <span class="m-widget4__ext">
+                                <span class="m-widget4__number m--font-danger">
+                                    {price}
+                                </span>
+                            </span>
+            </a>
+    </div>
 </div>
                     </div>
                 </div>
@@ -453,51 +524,53 @@
         </div>
     </form>
 
-    <form action="" onsubmit="order.saveNote(event, '<?= $this->url->get(['for' => 'order_addnote_ajax']) ?>')">
-        <div class="m-portlet m-portlet--full-height " id="formNote">
+    <?php if ($orderDetail->order_id > 0) { ?>
+        <form action="" onsubmit="order.saveNote(event, '<?= $this->url->get(['for' => 'order_addnote_ajax']) ?>')">
+            <div class="m-portlet m-portlet--full-height " id="formNote">
 
-            <div class="m-portlet__head">
-                <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                        <h3 class="m-portlet__head-text">
-                            Ghi chú đơn hàng
-                        </h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="m-portlet__body">
-
-                <div class="form-group m-form__group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <label class="m-checkbox m-checkbox--single">
-                                    <input type="checkbox" name="note_type" value="on">
-                                    <span></span>
-                                </label>
-                            </span>
-                            <span class="input-group-text" id="basic-addon1">
-                                Chung
-                            </span>
-                        </div>
-
-                        <input type="text" class="form-control" placeholder="Ghi chú đơn hàng" name="note_content">
-                        <input type="hidden" name="order_id" value="<?= $orderDetail->order_id ?>">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary loading-click" type="submit" data-target="#formNote">
-                                Thêm ghi chú
-                            </button>
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                Ghi chú đơn hàng
+                            </h3>
                         </div>
                     </div>
                 </div>
 
-                <div class="m-widget3" id="orderNotes">
+                <div class="m-portlet__body">
 
+                    <div class="form-group m-form__group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <label class="m-checkbox m-checkbox--single">
+                                        <input type="checkbox" name="note_type" value="on">
+                                        <span></span>
+                                    </label>
+                                </span>
+                                <span class="input-group-text" id="basic-addon1">
+                                    Chung
+                                </span>
+                            </div>
+
+                            <input type="text" class="form-control" placeholder="Ghi chú đơn hàng" name="note_content">
+                            <input type="hidden" name="order_id" value="<?= $orderDetail->order_id ?>">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary loading-click" type="submit" data-target="#formNote">
+                                    Thêm ghi chú
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-widget3" id="orderNotes">
+
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    <?php } ?>
 
 
 

@@ -9,10 +9,15 @@ $parameter = array(
 			'Common' => ROOT . '/common/',
 			'Core' => ROOT . '/app/modules/Core/',
             'Orders' => ROOT . '/app/modules/Orders/',
+            'Wp' => ROOT . '/app/modules/Wp/',
             'User' => ROOT . '/app/modules/User/'
 		)
 	),
 	'modules' => array(
+        "core" => array(
+            "className" => 'Core\\Module',
+            "path"      => ROOT . '/app/modules/Core/Module.php',
+        ),
         "orders" => array(
             "className" => 'Orders\\Module',
             "path"      => ROOT . '/app/modules/Orders/Module.php',
@@ -21,10 +26,10 @@ $parameter = array(
             "className" => 'User\\Module',
             "path"      => ROOT . '/app/modules/User/Module.php',
         ),
-        "core" => array(
-            "className" => 'Core\\Module',
-            "path"      => ROOT . '/app/modules/Core/Module.php',
-        ),
+        "wp" => array(
+            "className" => 'Wp\\Module',
+            "path"      => ROOT . '/app/modules/Wp/Module.php',
+        )
     ),
 	'db' => array(
 		'debug'    => false,
@@ -32,7 +37,7 @@ $parameter = array(
         'port'     => '3306',
         'username' => 'root',
         'password' => '',
-        'dbname'   => 'w1',
+        'dbname'   => 'nuhoangsale',
         'charset'  => 'utf8'
 	),
 	'volt' => array(
@@ -40,5 +45,5 @@ $parameter = array(
         'stat'               => true,
         'compiled_separator' => '%'
     ),
-    'path_wp_load' => '/Volumes/DATA/web-working/wordpress/w1/wp-load.php'
+    'path_wp_load' => '/Volumes/DATA/web-working/wordpress/w1/wp-load.php',
 );

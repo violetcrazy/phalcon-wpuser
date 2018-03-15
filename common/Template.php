@@ -38,11 +38,31 @@ class Template {
         return $html;
     }
 
+    public function optionsStatusUser($value = '') {
+
+        $html = "";
+        foreach (Constant::getUserLabel() as $key => $status) {
+            if (!is_array($value)) {
+                $checked = ($key == $value ) ? 'selected' : '';
+            } else {
+                $checked = in_array($key, $value) ? 'selected' : '';
+            }
+            $html .= "<option {$checked} value='{$key}'>{$status['label']}</option>";
+        }
+
+        return $html;
+    }
+
     public function optionsStatusOrder($value = '') {
 
         $html = "<option value=''>Chọn trạng thái</option>";
         foreach (Constant::getStatus() as $key => $status) {
-            $checked = ($key == $value ) ? 'selected' : '';
+            if (!is_array($value)) {
+                $checked = ($key == $value ) ? 'selected' : '';
+            } else {
+                $checked = in_array($key, $value) ? 'selected' : '';
+            }
+
             $html .= "<option {$checked} value='{$key}'>{$status['label']}</option>";
         }
 

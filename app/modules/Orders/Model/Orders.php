@@ -18,6 +18,7 @@ class Orders extends Model
     public $customer_name;
     public $customer_phone;
     public $customer_address;
+    public $seller_id;
 
     public $created_at;
     public $updated_at;
@@ -29,6 +30,9 @@ class Orders extends Model
 
     public $user_aff_id;
     public $user_aff_email;
+
+    public $payment_title;
+    public $payment_status;
 
     public $metas;
 
@@ -115,12 +119,29 @@ class Orders extends Model
         }
     }
 
+    public function beforeValidationOnUpdate()
+    {
+        if ($this->payment_status != 'paid') {
+            $this->payment_status = 'hold';
+        }
+        if ($this->payment_title != '') {
+            $this->payment_title = 'COD';
+        }
+    }
     public function beforeValidationOnCreate()
     {
         $currentTime = time();
 
         $this->updated_at = $currentTime;
         $this->created_at = $currentTime;
+
+        if ($this->payment_status != 'paid') {
+            $this->payment_status = 'hold';
+        }
+        if ($this->payment_title != '') {
+            $this->payment_status = 'COD';
+        }
+
 
         if ($this->user_aff_email == '') {
             $this->user_aff_email = 'not set';

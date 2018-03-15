@@ -9,7 +9,7 @@ class Routes
     public function init($router)
     {
 
-        $router->add('/don-hang', array(
+        $router->add('/', array(
             'module' => 'orders',
             'controller' => 'list',
             'action' => 'index',

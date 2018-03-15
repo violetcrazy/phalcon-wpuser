@@ -25,9 +25,12 @@ class Util {
         $get = $_GET;
         $get = array_merge($get, $data);
 
-        $url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'] . $get['_url'];
+        $url = $_SERVER['REQUEST_SCHEME'] . '://' . $_SERVER['HTTP_HOST'];
 
-        unset($get['_url']);
+        if (isset($get['_url'])) {
+            $url .= $get['_url'];
+            unset($get['_url']);
+        }
         $url .= "?" . http_build_query($get);
 
         return $url;

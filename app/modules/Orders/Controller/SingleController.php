@@ -4,6 +4,7 @@ namespace Orders\Controller;
 
 use Common\Constant;
 use \Core\Controller\BaseController;
+use Orders\Form\OrderForm;
 use Orders\Model\Orders;
 use Orders\Model\OrdersItem;
 use Phalcon\Exception;
@@ -23,8 +24,10 @@ class SingleController extends BaseController
     {
         $orderId = $this->dispatcher->getParam('id', array('int'), 0);
 
-        $billing = $this->request->getPost('billing');
         $shipping = $this->request->getPost('shipping');
+        $seller_id = $this->request->getPost('seller_id', array('int'), 0);
+        $customer_id = $this->request->getPost('customer_id', array('int'), 0);
+
 
         $orderRequest = $this->request->getPost('order_detail', array('striptags'), '');
         if (is_string($orderRequest)){
@@ -39,11 +42,31 @@ class SingleController extends BaseController
 
         $orderItems = $orderDetail->getItems('OBJECT');
 
+        $seller_id = ($seller_id > 0 && $seller_id != $orderDetail->seller_id)  ? $seller_id : $orderDetail->seller_id;
+        $seller  = User::findFirst("ID = '{$seller_id}'");
+        if ($seller) {
+            $seller = $seller->getSchemaApi();
+            $orderDetail->seller_id = $seller['ID'];
+        }
+
+        $customer_id = ($customer_id > 0 && $customer_id != $orderDetail->customer_id)  ? $customer_id : $orderDetail->customer_id;
+        $customer = User::findFirst("ID = '{$customer_id}'");
+        if ($seller) {
+            $customer = $customer->getSchemaApi();
+            $orderDetail->customer_id = $customer['ID'];
+        }
+
+        $orderForm = new OrderForm($orderDetail);
+        $this->view->orderForm = $orderForm;
+
         if ($this->request->isPost()){
+            $orderForm->bind($this->request->getPost(), $orderDetail);
+
+            $orderDetail->payment_title = $orderForm->getValue('payment_title');
+            $orderDetail->payment_status = $this->request->getPost('payment_status', array('striptags', 'int'), '');
 
             if ($this->validateOrder()) {
-                $orderDetail->total_price = 0;
-                $orderDetail->total_qty = 0;
+
 
                 $statusNew = $this->request->getPost('order_status', array('striptags', 'trim'), Constant::ORDER_STATUS_DEFAULT);
                 if ($statusNew != $orderDetail->status && !empty($statusNew)){
@@ -56,19 +79,38 @@ class SingleController extends BaseController
 
                 }
 
-                $customer = $this->checkCustomer($orderDetail);
+                if ($orderDetail->status != Constant::ORDER_STATUS_DEFAULT) {
+                    $orderDetail->update();
+                    $this->flashSession->warning('<b>Đơn hàng chỉ được phép chỉnh sửa trạng thái.</b>');
+                    $this->response->redirect(array(
+                        'for' => 'order_edit',
+                        'id' => $orderDetail->order_id
+                    ));
+
+                    return true;
+                }
+
+                $orderDetail->total_price = 0;
+                $orderDetail->total_qty = 0;
 
                 $orderDetail->saveShippingCustomer($shipping);
+
+                if($customer['ID'] > 0) {
+                    $orderDetail->customer_id = $customer['ID'];
+                    $orderDetail->customer_email = $customer['email'];
+                    $orderDetail->customer_phone = $customer['phone'];
+                    $orderDetail->customer_name = $customer['name'];
+                    $orderDetail->customer_address = $customer['address'];
+                }
 
                 foreach ($orderItems as $item) {
                     $item->delete();
                 }
-
                 foreach ($orderRequest['itemsline'] as $product){
                     if (is_array($product) && count($product) > 0){
                         $orderItem = new OrdersItem();
                         $orderItem->order_id = $orderDetail->order_id;
-                        $orderItem->customer_id = 0;
+                        $orderItem->customer_id = $customer['ID'];
                         $orderItem->saler_id = $this->userCurrent->ID;
                         $orderItem->product_id = 0;
                         $orderItem->product_name = trim($product['name']);
@@ -105,6 +147,7 @@ class SingleController extends BaseController
                         $orderDetail->update_meta('discount_note', $orderRequest['discount_note']);
                     }
                 }
+                $orderDetail->updated_at = time();
 
                 if (!$orderDetail->save()) {
                     foreach ($orderDetail->getMessages() as $m) {
@@ -123,14 +166,17 @@ class SingleController extends BaseController
             }
         }
 
-        $this->view->orderDetail = $orderDetail;
+        $this->view->setVars(compact(
+            'orderDetail',
+            'seller',
+            'customer'
+        ));
 
         $this->view->pick('orders/edit');
     }
 
     public function addAction()
     {
-
         if ($this->request->isPost()){
 
             if ($this->validateOrder()) {
@@ -138,47 +184,30 @@ class SingleController extends BaseController
             }
         }
 
-        $this->view->pick('orders/add');
+        $orderDetail = new Orders();
+        $this->view->orderForm = new OrderForm($orderDetail);
+
+        $this->view->setVars(compact(
+            'orderDetail',
+            'seller',
+            'customer'
+        ));
+
+        $this->view->pick('orders/edit');
     }
 
     private function validateOrder()
     {
         $output = true;
 
-        $billing = $this->request->getPost('billing');
         $shipping = $this->request->getPost('shipping');
         $orderRequest = $this->request->getPost('order_detail', array('striptags'), '');
         if (is_string($orderRequest)){
             $orderRequest = json_decode($orderRequest, true);
         }
 
-        if (empty($billing['phone']) || strlen($billing['phone']) < 10) {
-            $this->flashSession->error('Số điện thoại người mua không hợp lệ');
-            $output = false;
-        }
-
-        if (!empty($billing['email']) &&  !filter_var($billing['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->flashSession->error('Email người mua không hợp lệ');
-            $output = false;
-        }
-
-        if (empty($billing['address'])) {
-            $this->flashSession->error('Địa chỉ người mua là bắt buộc');
-            $output = false;
-        }
-
-        if (empty($billing['name'])) {
-            $this->flashSession->error('Tên người mua là bắt buộc');
-            $output = false;
-        }
-
         if (!empty($shipping['phone']) && strlen($shipping['phone']) < 10) {
             $this->flashSession->error('Số điện thoại người nhận không hợp lệ');
-            $output = false;
-        }
-
-        if (!empty($shipping['email']) &&  !filter_var($billing['email'], FILTER_VALIDATE_EMAIL)) {
-            $this->flashSession->error('Email người nhận không hợp lệ');
             $output = false;
         }
 
@@ -201,6 +230,8 @@ class SingleController extends BaseController
         $billing = $this->request->getPost('billing');
         $shipping = $this->request->getPost('shipping');
         $orderRequest = $this->request->getPost('order_detail', array('striptags'), '');
+        $seller_id = $this->request->getPost('seller_id', array('int'), 0);
+        $customer_id = $this->request->getPost('customer_id', array('int'), 0);
 
         if (!empty($orderRequest)) {
             $orderRequest = json_decode($orderRequest, true);
@@ -208,9 +239,27 @@ class SingleController extends BaseController
 
         $order = new Orders();
 
-        $customer = $this->checkCustomer($order);
+        $seller  = User::findFirst("ID = '{$seller_id}'");
+        if ($seller) {
+            $seller = $seller->getSchemaApi();
+            $order->seller_id = $seller['ID'];
+        } else {
+            $order->saler_id = $this->userCurrent->ID;
+        }
 
-        $order->saler_id = $this->userCurrent->ID;
+        $customer = User::findFirst("ID = '{$customer_id}'");
+        if ($seller) {
+            $customer = $customer->getSchemaApi();
+        }
+        if($customer['ID'] > 0) {
+            $order->customer_id = $customer['ID'];
+            $order->customer_email = $customer['email'];
+            $order->customer_phone = $customer['phone'];
+            $order->customer_name = $customer['name'];
+            $order->customer_address = $customer['address'];
+        }
+
+
         $order->total_price = 0;
         $order->total_qty = 0;
         $order->ip = $this->request->getClientAddress();
@@ -232,7 +281,7 @@ class SingleController extends BaseController
 
                         $orderItem = new OrdersItem();
                         $orderItem->order_id = $order->order_id;
-                        $orderItem->customer_id = $customer->ID;
+                        $orderItem->customer_id = $order->customer_id;
                         $orderItem->saler_id = $this->userCurrent->ID;
                         $orderItem->product_id = 0;
                         $orderItem->product_name = $product['name'];
@@ -246,6 +295,11 @@ class SingleController extends BaseController
                             }
 
                             $order->total_qty ++;
+                        } else {
+                            foreach ($orderItem->getMessages() as $m) {
+                                $this->flashSession->error($m->getMessage());
+                            }
+
                         }
                     }
                 }
@@ -273,9 +327,6 @@ class SingleController extends BaseController
 
             $order->saveShippingCustomer($shipping);
 
-            $billing['name'] = $billing['name'] . ' tạo từ đơn hàng #' . $order->order_id;
-            $customer->addAdress($billing);
-
             if(!$order->update()) {
                 foreach ($order->getMessages() as $m) {
                     $this->flashSession->error($m->getMessage());
@@ -289,42 +340,4 @@ class SingleController extends BaseController
         }
     }
 
-    public function checkCustomer(&$order)
-    {
-        $billing = $this->request->getPost('billing');
-
-        $customer = User::findFirst("
-        (user_phone = '{$billing['phone']}' AND user_email = '{$billing['email']}') 
-        OR (user_phone = '{$billing['phone']}') 
-        OR (user_email = '{$billing['email']}')");
-
-        if (!$customer) {
-            $customer = new User();
-            $customer->display_name = $billing['name'];
-            $customer->user_nicename = $billing['name'];
-            $customer->user_login = $billing['email'];
-            $customer->user_email = $billing['email'];
-            $customer->user_pass = md5(uniqid());
-            $customer->user_phone = $billing['phone'];
-            $customer->user_address = $billing['address'];
-            $customer->user_status = 0;
-
-            if (!$customer->create()){
-                $messs = $customer->getMessages();
-                foreach ($messs as $m) {
-                    $this->flashSession->error($m->getMessage());
-                }
-            }
-        }
-
-        $customer->update_meta('role', Constant::USER_MEMBER_CUSTOMER);
-
-        $order->customer_id = $customer->ID;
-        $order->customer_email = $customer->user_email;
-        $order->customer_phone = $customer->getPhone();
-        $order->customer_name = $customer->getName();
-        $order->customer_address = $customer->getAddress();
-
-        return $customer;
-    }
 }

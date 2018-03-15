@@ -4,6 +4,7 @@
 
     <form action="" class="formMain" method="post">
         <div class="m-portlet--head-solid-bg m-portlet m-portlet--mobile m-portlet--{{ template.getColorStatusOrder(orderDetail.status) }}">
+
             <div class="m-portlet__head">
                 <div class="m-portlet__head-caption">
                     <div class="m-portlet__head-title">
@@ -18,38 +19,56 @@
                     </div>
                     <div>
                         <b class="m--icon-font-size-lg1">{{ util.currencyFormat(orderDetail.total_price) }}</b>
-                        <span class="m--icon-font-size-sm2"> - Thanh toán tiền mặt khi nhận đuược hàng</span>
+                        <span class="m--icon-font-size-sm2"> - {{ orderDetail.payment_title }}</span>
                     </div>
                 </div>
 
                 <div class="m-portlet__head-tools">
-                    <select onchange="form.submit()" class="form-control m-input m-input--square" id="" name="order_status">
-                        {{ template.optionsStatusOrder(orderDetail.status) }}
-                    </select>
+                    {% if orderDetail.order_id > 0 %}
+                        <select onchange="form.submit()" class="form-control m-input m-input--square" id="" name="order_status">
+                            {{ template.optionsStatusOrder(orderDetail.status) }}
+                        </select>
+                    {% endif %}
                 </div>
 
             </div>
+
             <div class="m-portlet__body">
                 <div class="row">
                     <div class="col-lg-5">
-                        <div class="form-group m-form__group">
-                            <label class="col-form-label">
-                                Người phụ trách
+                        <div class="form-group m-form__group row">
+                            <label for="user_name" class="col-3 col-form-label">
+                                CSKH
                             </label>
-                            <div class="">
-                                <select class="form-control selectCskh" id="" name="param" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
-                                    <option></option>
+
+                            <div class="col-9">
+                                <select {{ orderDetail.status != constant('\Common\Constant::ORDER_STATUS_DEFAULT') ? 'disabled' : '' }} class="form-control selectCskh" id="" name="seller_id" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
+                                    {% if (seller) %}
+                                        <option value="{{ seller['ID'] }}">{{ seller['name'] }} - {{ seller['phone'] }} - {{ seller['address'] }}</option>
+                                    {% endif %}
                                 </select>
                             </div>
                         </div>
 
-                        <h5><b>Người mua</b></h5>
-                        {{ formGroupText('billing[name]', {'label': 'Họ & tên', 'value': orderDetail.getBilling('name'), 'id': 'user_name'}) }}
-                        {{ formGroupText('billing[phone]', {'label': 'Điện thoại', 'value': orderDetail.getBilling('phone'), 'id': 'user_phone'}) }}
-                        {{ formGroupText('billing[email]', {'label': 'Email', 'value': orderDetail.getBilling('email'), 'id': 'user_email'}) }}
-                        {{ formGroupText('billing[address]', {'label': 'Địa chỉ', 'value': orderDetail.getBilling('address'), 'id': 'user_address'}) }}
+                        <div class="form-group m-form__group row">
+                            <label for="user_name" class="col-3 col-form-label">
+                                <b>Người mua</b>
+                            </label>
 
-                        <h5 class=""><b>Người nhận</b></h5>
+                            <div class="col-9">
+                                <select {{ orderDetail.status != constant('\Common\Constant::ORDER_STATUS_DEFAULT') ? 'disabled' : '' }}  class="form-control selectCskh" id="" name="customer_id" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
+                                    {% if (seller) %}
+                                        <option value="{{ customer['ID'] }}">{{ customer['name'] }} - {{ customer['phone'] }} - {{ customer['address'] }}</option>
+                                    {% endif %}
+                                </select>
+                            </div>
+                        </div>
+                        <hr>
+                        <h5 class="text-right"><b>Thanh toán</b></h5>
+                        {{ orderForm.renderDecoratedInline('payment_title') }}
+                        {{ orderForm.renderDecoratedInline('payment_status') }}
+                        <hr>
+                        <h5 class="text-right"><b>Người nhận</b></h5>
                         {{ formGroupText('shipping[name]', {'label': 'Họ & tên', 'value': orderDetail.getShipping('name'), 'id': 'user_name'}) }}
                         {{ formGroupText('shipping[phone]', {'label': 'Điện thoại', 'value': orderDetail.getShipping('phone'), 'id': 'user_phone'}) }}
                         {{ formGroupText('shipping[email]', {'label': 'Email', 'value': orderDetail.getShipping('email'), 'id': 'user_email'}) }}
@@ -72,51 +91,53 @@
         </div>
     </form>
 
-    <form action="" onsubmit="order.saveNote(event, '{{ url.get({'for': 'order_addnote_ajax'}) }}')">
-        <div class="m-portlet m-portlet--full-height " id="formNote">
+    {% if orderDetail.order_id > 0 %}
+        <form action="" onsubmit="order.saveNote(event, '{{ url.get({'for': 'order_addnote_ajax'}) }}')">
+            <div class="m-portlet m-portlet--full-height " id="formNote">
 
-            <div class="m-portlet__head">
-                <div class="m-portlet__head-caption">
-                    <div class="m-portlet__head-title">
-                        <h3 class="m-portlet__head-text">
-                            Ghi chú đơn hàng
-                        </h3>
-                    </div>
-                </div>
-            </div>
-
-            <div class="m-portlet__body">
-
-                <div class="form-group m-form__group">
-                    <div class="input-group">
-                        <div class="input-group-prepend">
-                            <span class="input-group-text">
-                                <label class="m-checkbox m-checkbox--single">
-                                    <input type="checkbox" name="note_type" value="on">
-                                    <span></span>
-                                </label>
-                            </span>
-                            <span class="input-group-text" id="basic-addon1">
-                                Chung
-                            </span>
-                        </div>
-
-                        <input type="text" class="form-control" placeholder="Ghi chú đơn hàng" name="note_content">
-                        <input type="hidden" name="order_id" value="{{ orderDetail.order_id }}">
-                        <div class="input-group-append">
-                            <button class="btn btn-primary loading-click" type="submit" data-target="#formNote">
-                                Thêm ghi chú
-                            </button>
+                <div class="m-portlet__head">
+                    <div class="m-portlet__head-caption">
+                        <div class="m-portlet__head-title">
+                            <h3 class="m-portlet__head-text">
+                                Ghi chú đơn hàng
+                            </h3>
                         </div>
                     </div>
                 </div>
 
-                <div class="m-widget3" id="orderNotes">
+                <div class="m-portlet__body">
 
+                    <div class="form-group m-form__group">
+                        <div class="input-group">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text">
+                                    <label class="m-checkbox m-checkbox--single">
+                                        <input type="checkbox" name="note_type" value="on">
+                                        <span></span>
+                                    </label>
+                                </span>
+                                <span class="input-group-text" id="basic-addon1">
+                                    Chung
+                                </span>
+                            </div>
+
+                            <input type="text" class="form-control" placeholder="Ghi chú đơn hàng" name="note_content">
+                            <input type="hidden" name="order_id" value="{{ orderDetail.order_id }}">
+                            <div class="input-group-append">
+                                <button class="btn btn-primary loading-click" type="submit" data-target="#formNote">
+                                    Thêm ghi chú
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="m-widget3" id="orderNotes">
+
+                    </div>
                 </div>
             </div>
-        </div>
-    </form>
+        </form>
+    {% endif %}
 
 
 
@@ -150,163 +171,4 @@
             $(document).trigger('updateCoupon')
         });
     </script>
-{% endblock %}
-
-
-{% block content_right %}
-    <div class="row">
-        <h4>Ghi chú đơn hàng</h4>
-
-        <div class="m-messenger m-messenger--message-arrow m-messenger--skin-light">
-            <div class="m-messenger__messages">
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--in">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-username">
-                                    Megan wrote
-                                </div>
-                                <div class="m-messenger__message-text">
-                                    Hi Bob. What time will be the meeting ?
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--out">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-text">
-                                    Hi Megan. It's at 2.30PM
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--in">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-username">
-                                    Megan wrote
-                                </div>
-                                <div class="m-messenger__message-text">
-                                    Will the development team be joining ?
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--out">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-text">
-                                    Yes sure. I invited them as well
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--in">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-username">
-                                    Megan wrote
-                                </div>
-                                <div class="m-messenger__message-text">
-                                    Noted. For the Coca-Cola Mobile App project as well ?
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--out">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-text">
-                                    Yes, sure.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--out">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-text">
-                                    Please also prepare the quotation for the Loop CRM project as well.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--in">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-username">
-                                    Megan wrote
-                                </div>
-                                <div class="m-messenger__message-text">
-                                    Noted. I will prepare it.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--out">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-text">
-                                    Thanks Megan. I will see you later.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="m-messenger__wrapper">
-                    <div class="m-messenger__message m-messenger__message--in">
-                        <div class="m-messenger__message-body">
-                            <div class="m-messenger__message-arrow"></div>
-                            <div class="m-messenger__message-content">
-                                <div class="m-messenger__message-username">
-                                    Megan wrote
-                                </div>
-                                <div class="m-messenger__message-text">
-                                    Sure. See you in the meeting soon.
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="m-messenger__seperator"></div>
-            <div class="m-messenger__form">
-                <div class="m-messenger__form-controls">
-                    <input type="text" name="" placeholder="Type here..." class="m-messenger__form-input">
-                </div>
-                <div class="m-messenger__form-tools">
-                    <a href="" class="m-messenger__form-attachment">
-                        <i class="la la-paperclip"></i>
-                    </a>
-                </div>
-            </div>
-        </div>
-    </div>
 {% endblock %}

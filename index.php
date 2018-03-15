@@ -30,7 +30,7 @@ class Bootstrap
 	public function initConfig()
 	{
         $parameter = array();
-	    require_once ROOT . '/app/config/parameter.php';
+	    require_once ROOT . "/app/config/parameter_". ENV .".php";
 		$this->config = new \Phalcon\Config($parameter);
 		$this->di->setShared('config', $this->config);
 	}
@@ -233,7 +233,7 @@ class Bootstrap
         $view->start();
 
         $registry = $this->di['registry'];
-        if (ENV == 'dev') {
+        if (ENV != 'dev') {
             $debug = new \Phalcon\Debug();
             $debug->listen();
 
@@ -243,6 +243,7 @@ class Bootstrap
                 $dispatcher->dispatch();
             } catch (\Phalcon\Exception $e) {
                 // Errors catching
+                
                 $view->e = $e;
 
                 if ($e instanceof \Phalcon\Mvc\Dispatcher\Exception) {
@@ -294,8 +295,9 @@ class Bootstrap
 
     private function initRouting($application)
     {
-        $router = new  \Phalcon\Mvc\Router(false);
+        $router = new  \Phalcon\Mvc\Router();
         $router->setDi($this->di);
+
         foreach ($application->getModules() as $module) {
             $routesClassName = str_replace('Module', 'Routes', $module['className']);
             if (class_exists($routesClassName)) {
@@ -303,6 +305,13 @@ class Bootstrap
                 $router = $routesClass->init($router);
             }
         }
+
+        $router->notFound(array(
+            'module'        => 'core',
+            'controller'    => 'error',
+            'action'        => 'error404',
+            'params' => 'Url không hợp lệ'
+        ));
 
         $router->setUriSource(\Phalcon\Mvc\Router::URI_SOURCE_SERVER_REQUEST_URI);
 
@@ -330,7 +339,7 @@ class Bootstrap
         $this->initUrl();
         $this->iniSession();
         $this->initView();
-
+        
         $this->di->setShared('util', function(){
             return new \Common\Util();
         });
@@ -347,7 +356,9 @@ class Bootstrap
 
 
         $this->initEventManager($this->di);
+
 		$this->initRouting($application);
+
 
         $application->setDI($this->di);
 

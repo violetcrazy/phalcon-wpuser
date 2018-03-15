@@ -24,6 +24,37 @@
     <br>
 
     <table class="table tableExcel">
+        <tbody id="">
+        <tr class="rowExcel">
+            <td colspan="2">
+                <input type="text"
+                       class="js_product_name "
+                       placeholder="Tên sản phẩm"
+                       onblur="setTimeout(function(){$('.resultProducts').html('')}, 100)"
+                       oninput="order.findProduct(event, this)"
+                       data-url="{{ url.get({'for': 'wp_ajax_list'}) }}"
+                       data-result=".resultProducts">
+
+                <div class="resultProducts">
+
+                </div>
+
+            </td>
+            <td width="20%">
+                <input type="text" class="js_product_price formatCurrency" placeholder="Giá"></td>
+            <td width="10%">
+                <input type="number" class="js_product_qty" value="1">
+                <button
+                        type="button"
+                        class="btn btn-add-row" onclick="order.addProduct(event, '#itemsLine')">
+                    <span class="fa fa-plus"></span>
+                </button>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-bordered tableExcel m-table m-table--head-bg-accent">
         <thead>
         <tr>
             <th>Tên sản phẩm</th>
@@ -38,24 +69,7 @@
         </tbody>
     </table>
 
-    <table class="table tableExcel">
-        <tbody id="">
-        <tr class="rowExcel">
-            <td colspan="2">
-                <input type="text" class="js_product_name" placeholder="Tên sản phẩm"></td>
-            <td width="20%">
-                <input type="text" class="js_product_price formatCurrency" placeholder="Giá"></td>
-            <td width="10%">
-                <input type="number" class="js_product_qty" value="1">
-                <button
-                        type="button"
-                        class="btn btn-add-row" onclick="order.addProduct(event, '#itemsLine')">
-                    <span class="fa fa-plus"></span>
-                </button>
-            </td>
-        </tr>
-        </tbody>
-    </table>
+
 </div>
 
 
@@ -92,4 +106,29 @@
         </tr>
         </tbody>
     </table>
+
+
+    <div id="templateWidget4">
+
+            <a href="javascript:;" class="m-widget4__item" onclick="order.addProductByJson(event, this)">
+                <div class="m-widget4__img m-widget4__img--logo" style="width: 50px; min-height: 40px;">
+                    <img src="{image}" alt="" >
+                </div>
+                <div class="m-widget4__info">
+                                <span class="m-widget4__title">
+                                    {name}
+                                </span>
+                    <span class="jsondata m--hide">{jsondata}</span>
+                    <br>
+                    <span class="m-widget4__sub">
+                                    {desc}
+                                </span>
+                </div>
+                <span class="m-widget4__ext">
+                                <span class="m-widget4__number m--font-danger">
+                                    {price}
+                                </span>
+                            </span>
+            </a>
+    </div>
 </div>

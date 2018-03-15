@@ -274,9 +274,22 @@
 
         <li class="m-menu__section">
             <h4 class="m-menu__section-text">
-                Components
+                Quick Action
             </h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+
+        <li class="m-menu__item">
+            <a href="#" class="m-menu__link ">
+                <i class="m-menu__link-icon flaticon-user-add"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Tạo Tài khoản
+                        </span>
+                    </span>
+                </span>
+            </a>
         </li>
 
     </ul>
@@ -290,9 +303,11 @@
                 
 
     <?= $this->template->openPortlet(['title' => 'Các đơn hàng', 'sub_title' => 'Tổng cộng <b>500</b> đơn hàng']) ?>
+
         <div class="topFilter m--margin-bottom-20">
-            <div class="pull-left">
-                <form action="" class="">
+            <form action="" class="">
+                <div class="pull-left">
+
                     <div class=" m--block-inline">
                         <select name="" id="" class="form-control">
                             <option value="">Thao tác</option>
@@ -303,30 +318,42 @@
                     <div class=" m--block-inline">
                         <button class="btn btn-accent">Áp dụng</button>
                     </div>
-                </form>
-            </div>
+                </div>
 
-            <div class="pull-right">
-                <form action="">
+                <div class="pull-right">
                     <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
+                        <input type="number" value="<?= $this->request->getQuery('order_id', ['int'], '') ?>" name="order_id" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
+                    </div>
+
+                    <div class=" m--block-inline">
+                        <select name="date_range" id="" class="form-control" onchange="form.submit()">
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == '' ? 'selected' : '') ?> value="">Chọn ngày</option>
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == 'now' ? 'selected' : '') ?> value="now">Trong ngày</option>
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == 'star_week' ? 'selected' : '') ?> value="star_week">Từ thứ 2</option>
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == 'star_month' ? 'selected' : '') ?> value="star_month">Từ đầu tháng (ngày 1)</option>
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == '7dayago' ? 'selected' : '') ?> value="7dayago">7 ngày trước</option>
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == '15dayago' ? 'selected' : '') ?> value="15dayago">15 ngày trước</option>
+                            <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == '30dayago' ? 'selected' : '') ?> value="30dayago">30 ngày trước</option>
+                        </select>
+                    </div>
+
+                    <div class=" m--block-inline">
+                        <select name="status" id="" class="form-control" onchange="form.submit()">
+                            <?= $this->template->optionsStatusOrder($this->request->getQuery('status')) ?>
+                        </select>
                     </div>
                     <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="Giá nhỏ">
-                    </div>
-                    <div class=" m--block-inline">
-                        <input type="number" class="form-control" style="width: 160px" placeholder="Giá lớn">
-                    </div>
-                    <div class=" m--block-inline">
-                        <select name="" id="" class="form-control">
-                            <option value="">Trạng thái</option>
+                        <select name="sort" id="" class="form-control" onchange="form.submit()">
+                            <option value="">Sắp xếp</option>
+                            <option <?= ($this->request->getQuery('sort', ['striptags', 'trim'], '') == 'create' ? 'selected' : '') ?> value="create">Ngày tạo</option>
+                            <option <?= ($this->request->getQuery('sort', ['striptags', 'trim'], '') == 'update' ? 'selected' : '') ?> value="update">Ngày cập nhật</option>
                         </select>
                     </div>
                     <div class=" m--block-inline">
                         <button class="btn btn-primary">Áp dụng</button>
                     </div>
-                </form>
-            </div>
+                </div>
+            </form>
             <div class="clearfix"></div>
         </div>
 
@@ -348,11 +375,11 @@
                                 <span class="noenter"><?= $order->getStatusHtml() ?></span>
                             </td>
                             <td>
-                                        <span style="width: 150px;">
-                                            <a href="<?= $this->url->get(['for' => 'order_edit', 'id' => $order->order_id]) ?>">
-                                                <b class="m--icon-font-size-lg1">#<?= $order->order_id ?></b> <?= $order->getIp() ?>
-                                            </a>
-                                        </span>
+                                <span style="width: 150px;">
+                                    <a href="<?= $this->url->get(['for' => 'order_edit', 'id' => $order->order_id]) ?>">
+                                        <b class="m--icon-font-size-lg1">#<?= $order->order_id ?></b> <?= $order->getIp() ?>
+                                    </a>
+                                </span>
                             </td>
                             <td>
                                 <b class="m--font-danger m--icon-font-size-lg1">
@@ -387,6 +414,7 @@
         </div>
 
         <?= $this->template->pagination($result->total_pages, $result->current, 3) ?>
+
     <?= $this->template->closePortlet() ?>
 
 

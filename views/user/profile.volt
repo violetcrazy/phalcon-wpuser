@@ -123,6 +123,17 @@
                                     {{ form.renderDecoratedInline('user_phone') }}
                                     {{ form.renderDecoratedInline('user_email') }}
                                     {{ form.renderDecoratedInline('user_address') }}
+
+                                    <hr>
+
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-3 col-form-label" for="user_phone">Vai trò / Chức vụ</label>
+                                        <div class="col-9">
+                                            <select name="role[]" id="" class="form-control enSelect2" multiple>
+                                                {{ template.optionsStatusUser( user is defined ? user.getMeta('role', false) : '' ) }}
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="m-portlet__foot m-portlet__foot--fit">
                                     <div class="m-form__actions">

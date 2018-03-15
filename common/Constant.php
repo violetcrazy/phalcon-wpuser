@@ -22,6 +22,7 @@ class Constant {
     const USER_MEMBER_SELLER = 'seller';
     const USER_MEMBER_SUPPORTER = 'supporter';
 
+
     public static function getUserLabel($key = '', $onlyLabel = false){
         $status = array(
             self::USER_MEMBER_CUSTOMER => array(
@@ -66,7 +67,7 @@ class Constant {
             }
 
         } else {
-            return array();
+            return '';
         }
     }
 
@@ -78,7 +79,7 @@ class Constant {
                 'color' => 'danger'
             ),
             self::ORDER_STATUS_PROCESSING => array(
-                'label' => 'Đang xử lý',
+                'label' => 'Đã xác nhận',
                 'class' => 'm-badge m-badge--wide m-badge--info',
                 'color' => 'info'
             ),

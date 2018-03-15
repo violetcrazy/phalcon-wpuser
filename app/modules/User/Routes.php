@@ -8,17 +8,6 @@ class Routes
 
     public function init($router)
     {
-
-        $router->add('/', array(
-            'module' => 'user',
-            'controller' => 'index',
-            'action' => 'index',
-            'auth' => true,
-            'parent' => 0,
-            'show_in_menu' => 1,
-            'title_menu' => 'Trang chủ',
-            'icon_menu' => 'flaticon-line-graph'
-        ))->setName('user_index');
         
         $router->add('/thoat', array(
             'module' => 'user',

@@ -274,9 +274,22 @@
 
         <li class="m-menu__section">
             <h4 class="m-menu__section-text">
-                Components
+                Quick Action
             </h4>
             <i class="m-menu__section-icon flaticon-more-v3"></i>
+        </li>
+
+        <li class="m-menu__item">
+            <a href="#" class="m-menu__link ">
+                <i class="m-menu__link-icon flaticon-user-add"></i>
+                <span class="m-menu__link-title">
+                    <span class="m-menu__link-wrap">
+                        <span class="m-menu__link-text">
+                            Tạo Tài khoản
+                        </span>
+                    </span>
+                </span>
+            </a>
         </li>
 
     </ul>
@@ -410,6 +423,17 @@
                                     <?= $form->renderDecoratedInline('user_phone') ?>
                                     <?= $form->renderDecoratedInline('user_email') ?>
                                     <?= $form->renderDecoratedInline('user_address') ?>
+
+                                    <hr>
+
+                                    <div class="form-group m-form__group row">
+                                        <label class="col-3 col-form-label" for="user_phone">Vai trò / Chức vụ</label>
+                                        <div class="col-9">
+                                            <select name="role[]" id="" class="form-control enSelect2" multiple>
+                                                <?= $this->template->optionsStatusUser($user->getMeta('role', false)) ?>
+                                            </select>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="m-portlet__foot m-portlet__foot--fit">
                                     <div class="m-form__actions">

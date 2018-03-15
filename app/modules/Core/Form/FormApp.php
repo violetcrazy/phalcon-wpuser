@@ -1,6 +1,7 @@
 <?php
 namespace Core\Form;
 
+use Phalcon\Forms\Element\Check;
 use Phalcon\Forms\Element\Hidden;
 
 
@@ -31,6 +32,22 @@ abstract class FormApp extends \Phalcon\Forms\Form
             echo $element;
         } else {
             switch (true) {
+                case $element instanceof Check:
+                    $ele = $element->getAttribute('text');
+                    $html .= "<div class=\"form-group m-form__group row\">
+                                {$this->makeLabelInline($element)}
+                                <div class=\"col-9\">
+                                    <span class='m-switch m-switch--outline m-switch--icon m-switch--success'>
+                                       <label>
+                                            {$element}
+                                            <span></span>
+                                        </label>
+                                    </span>
+                                </div>
+                            </div>";
+
+                    break;
+
                 default:
                     $html .= "<div class=\"form-group m-form__group row\">
                                 {$this->makeLabelInline($element)}
@@ -50,7 +67,7 @@ abstract class FormApp extends \Phalcon\Forms\Form
         $html = '';
         if ($this->getElements()) {
             foreach ($this->getElements() as $element) {
-                $html .= $this->renderDecorated($element->getName());
+                $html .= $this->renderDecoratedInline($element->getName());
             }
         }
         return $html;

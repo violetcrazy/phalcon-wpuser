@@ -2,6 +2,7 @@
 
 namespace User\Controller;
 
+use Common\Constant;
 use Phalcon\Exception;
 use User\Form\UserFrom;
 use User\HelperModel\UserHelper;
@@ -45,6 +46,17 @@ class IndexController extends BaseController
                 if($user->save()) {
                     $this->flashSession->success('Cập nhật thành công thông tin người dùng.');
 
+                    $role = $this->request->getPost('role');
+                    if (is_array($role)) {
+                        foreach ($role as $key => $r) {
+                            if (empty(Constant::getUserLabel($r))){
+                                unset($role[$key]);
+                            } else {
+                                $user->update_meta('role', $r);
+                            }
+                        }
+                    }
+
                     $this->response->redirect(array(
                         'for' => 'user_profile_edit',
                         'id' => $user->ID
@@ -66,12 +78,13 @@ class IndexController extends BaseController
 
     public function listingAction()
     {
+        
         $page = $this->request->getQuery('page', array('striptags', 'int'), 1);
         $UserHelper = new UserHelper();
         $users = $UserHelper->getUsersPagination(array(
             'page' => $page
         ));
-
+        
         $outDebug = [];
         $setupData = new UserSetupData();
         foreach ($users->items as $user){

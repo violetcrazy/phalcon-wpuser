@@ -1,4 +1,6 @@
 var dateData = new Date();
+var ajaxSearchProduct = false;
+var ajaxSearchTimeout = false;
 var order = {
     itemsline: [],
     total: 0,
@@ -127,12 +129,13 @@ var order = {
         }));
     },
     deleteFee: function(event, index){
-        if (typeof this.fee[index] != 'undefined') {
+        if (typeof this.fee[index] !== 'undefined') {
             delete this.fee[index];
             this.reload();
         }
     },
     addFee: function(event, targetEvent, el){
+        var that = this;
         var data = $(targetEvent).data();
         var tr = $(targetEvent).closest('tr');
 
@@ -141,8 +144,13 @@ var order = {
             (typeof  data.note !== 'undefined' && $(data.note).length > 0)) {
             var feeVl = $(data.value).val();
             feeVl = parseInt(feeVl);
+
+            if(typeof that.fee !== "object") {
+                that.fee = [];
+            }
+
             if (feeVl > 0 && $(data.note).val() !== '') {
-                order.fee.push({
+                that.fee.push({
                     'value': feeVl,
                     'note': $(data.note).val()
                 });
@@ -219,6 +227,58 @@ var order = {
                 $form.trigger('reset');
             }
         })
+    },
+
+    addProductByJson: function (event, el) {
+        var json = $(el).find('.jsondata').text();
+        json = JSON.parse(json);
+        if(typeof json === 'object') {
+            $('.js_product_name').val(json.name);
+            $('.js_product_price').val(numberFormat.from(json.price));
+            $('.js_product_qty').val(1);
+
+            $('.resultProducts').html('')
+        }
+    },
+    findProduct: function (event, el) {
+        var html = "<div class='m-widget4 listResult' style='width: 100%'>";
+        var template = $('#templateWidget4').html();
+        var data = $(el).data();
+        $(el).parent().addClass('m-loader m-loader--primary m-loader--right');
+
+        $(data.result).html('');
+
+        var url = data.url;
+        url += '?q=' + $(el).val();
+
+        try {
+            ajaxSearchProduct.abort();
+            clearTimeout(ajaxSearchTimeout);
+        } catch (error) {
+        }
+
+
+        ajaxSearchTimeout = setTimeout(function(){
+            ajaxSearchProduct = $.getJSON(url, function(res){
+                $(el).parent().removeClass('m-loader m-loader--primary m-loader--right');
+
+                if (typeof res.result !== 'undefined' && res.result.length > 0) {
+                    $.each(res.result, function(index, value){
+                        html += nano(template, {
+                            "image" : value.image,
+                            "name" : value.name,
+                            "desc" : "",
+                            "sku" : value.sku,
+                            "price" : numberFormat.to(parseInt(value.price)),
+                            "jsondata": JSON.stringify(value)
+                        })
+                    })
+                }
+                html += '</div>';
+                $(data.result).html(html);
+
+            });
+        }, 400);
     }
 };
 

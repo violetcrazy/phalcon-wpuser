@@ -51,16 +51,18 @@ class AuthController extends BaseController
                 if (isset($authWP->data->ID)){
 
                     $this->session->set('AUTH', $userM->getPublicInfo());
-                    $this->cookies->set('AUTH', $userM->getPublicInfo(), time() + (86400 * 30));
+                    $this->cookies->set('AUTH', serialize($userM->getPublicInfo()), time() + (86400 * 30));
 
                     $this->flashSession->success('Đăng nhập thành công.');
+
                     if (!empty($urlRedirect)){
                         $this->response->redirect($urlRedirect);
                     } else {
                         $this->response->redirect(array(
-                            'for' => 'user_index'
+                            'for' => 'order_index'
                         ));
                     }
+
                 } else {
                     $this->flashSession->error('Mật khẩu không đúng.');
                 }

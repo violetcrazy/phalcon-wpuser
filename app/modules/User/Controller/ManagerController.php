@@ -43,6 +43,5 @@ class ManagerController extends BaseController
         }
 
         $this->view->pick('user/profile');
-        $this->view->pick('user/profile');
     }
 }

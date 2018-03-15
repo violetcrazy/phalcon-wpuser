@@ -54,15 +54,26 @@ class User extends Model
 
     public function update_meta($key, $value)
     {
-        $role = $this->getMeta($key);
+        if (is_array($value)) {
+            $value = serialize($value);
+        }
+
         $meta = UserMeta::findFirst("user_id = '{$this->ID}' AND  meta_key = '{$key}' AND meta_value = '{$value}'");
         if (!$meta) {
             $meta = new UserMeta();
+
             $meta->user_id = $this->ID;
             $meta->meta_key = $key;
+
             $meta->meta_value = $value;
 
             $meta->create();
+        } else {
+            $meta->user_id = $this->ID;
+            $meta->meta_key = $key;
+
+            $meta->meta_value = $value;
+            $meta->update();
         }
     }
 

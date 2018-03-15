@@ -2,6 +2,8 @@
 $(document).ready(function(){
     $(".formatCurrency").number(true,0);
 
+    $(".enSelect2").select2({});
+
     $(".selectCskh").select2({
         placeholder: "Tìm nhân viên",
         allowClear: true,
