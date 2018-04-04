@@ -69,7 +69,7 @@ class Template {
         return $html;
     }
 
-    public function openPortlet($args)
+    public function openPortlet($args = array())
     {
         $html = '';
         $html .= "<div class='m-portlet m-portlet--mobile'>";
@@ -78,22 +78,29 @@ class Template {
             $html .= "<div class='m-portlet__head'>";
             $html .= "<div class='m-portlet__head-caption'>";
             $html .= "<div class='m-portlet__head-title'>";
-            $html .= "<h3 class='m-portlet__head-text'>";
-            $html .= $args['title'];
+            if (isset($args['title'])) {
+                $html .= "<h3 class='m-portlet__head-text'>";
+                $html .= $args['title'];
 
-            if (isset($args['sub_title'])) {
-                $html .= "<small>{$args['sub_title']}</small>";
+                if (isset($args['sub_title'])) {
+                    $html .= "<small>{$args['sub_title']}</small>";
+                }
+                $html .= "</h3>";
             }
-
-            $html .= "</h3></div></div></div>";
+            $html .= "</div></div></div>";
         }
 
-        $html .= "<div class='m-portlet__body'>";
+        $classBody  = '';
+        if(isset($args['body_nopadding'])) {
+            $classBody = 'm-portlet__body--no-padding';
+        }
+
+        $html .= "<div class='m-portlet__body {$classBody}'>";
 
         return $html;
     }
 
     public function closePortlet(){
-        return '</div>';
+        return '</div></div>';
     }
 }

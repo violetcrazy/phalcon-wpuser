@@ -51,7 +51,7 @@ class SingleController extends BaseController
 
         $customer_id = ($customer_id > 0 && $customer_id != $orderDetail->customer_id)  ? $customer_id : $orderDetail->customer_id;
         $customer = User::findFirst("ID = '{$customer_id}'");
-        if ($seller) {
+        if ($customer) {
             $customer = $customer->getSchemaApi();
             $orderDetail->customer_id = $customer['ID'];
         }
@@ -76,6 +76,8 @@ class SingleController extends BaseController
                     $statusNewLabel = $orderDetail->getStatusHtml();
 
                     $orderDetail->addNote("{$userName} đã chuyển trạng thái từ {$statusOldLabel} ==> {$statusNewLabel}", Constant::ORDER_NOTE_TYPE_SYSTEM);
+
+                    \Plugins\Kiotviet::createOrder($orderDetail->order_id);
 
                 }
 
@@ -111,13 +113,14 @@ class SingleController extends BaseController
                         $orderItem = new OrdersItem();
                         $orderItem->order_id = $orderDetail->order_id;
                         $orderItem->customer_id = $customer['ID'];
-                        $orderItem->saler_id = $this->userCurrent->ID;
+                        $orderItem->seller_id = $this->userCurrent->ID;
                         $orderItem->product_id = 0;
                         $orderItem->product_name = trim($product['name']);
                         $orderItem->product_price = $product['price'];
                         $orderItem->product_qty = $product['qty'];
-                        $orderItem->product_sku = '';
-
+                        $orderItem->product_sku = $product['sku'];
+                        $orderItem->product_url = $product['url'];
+                        $orderItem->product_image = $product['image'];
 
                         if (!$orderItem->create()) {
                             foreach ($orderItem->getMessages() as $mess) {
@@ -163,6 +166,14 @@ class SingleController extends BaseController
                 ));
 
                 return true;
+            }
+        }
+
+        if ( $orderDetail->user_aff_id ) {
+            $affUser = User::findFirst("ID = '{$orderDetail->user_aff_id}'");
+
+            if($affUser) {
+                $this->view->aff_name = $affUser->getName();
             }
         }
 
@@ -248,7 +259,7 @@ class SingleController extends BaseController
         }
 
         $customer = User::findFirst("ID = '{$customer_id}'");
-        if ($seller) {
+        if ($customer) {
             $customer = $customer->getSchemaApi();
         }
         if($customer['ID'] > 0) {
@@ -287,14 +298,16 @@ class SingleController extends BaseController
                         $orderItem->product_name = $product['name'];
                         $orderItem->product_price = $product['price'];
                         $orderItem->product_qty = $product['qty'];
-                        $orderItem->product_sku = '';
+                        $orderItem->product_sku = $product['sku'];
+                        $orderItem->product_url = $product['url'];
+                        $orderItem->product_image = $product['image'];
 
                         if ($orderItem->create()) {
                             if ($total > 0) {
                                 $order->total_price += $total;
                             }
 
-                            $order->total_qty ++;
+                            $order->total_qty += $product['qty'];
                         } else {
                             foreach ($orderItem->getMessages() as $m) {
                                 $this->flashSession->error($m->getMessage());

@@ -17,8 +17,8 @@ class ErrorController extends BaseController
         echo $e;
         echo __FUNCTION__ . __CLASS__; die;
     }
-    public function ErrorAction()
+    public function ErrorAction($e)
     {
-        echo __FUNCTION__ . __CLASS__; die;
+        var_dump($e->getMessages());
     }
 }

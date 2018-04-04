@@ -57,7 +57,7 @@
 
                             <div class="col-9">
                                 <select {{ orderDetail.status != constant('\Common\Constant::ORDER_STATUS_DEFAULT') ? 'disabled' : '' }}  class="form-control selectCskh" id="" name="customer_id" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
-                                    {% if (seller) %}
+                                    {% if (customer) %}
                                         <option value="{{ customer['ID'] }}">{{ customer['name'] }} - {{ customer['phone'] }} - {{ customer['address'] }}</option>
                                     {% endif %}
                                 </select>
@@ -73,6 +73,11 @@
                         {{ formGroupText('shipping[phone]', {'label': 'Điện thoại', 'value': orderDetail.getShipping('phone'), 'id': 'user_phone'}) }}
                         {{ formGroupText('shipping[email]', {'label': 'Email', 'value': orderDetail.getShipping('email'), 'id': 'user_email'}) }}
                         {{ formGroupText('shipping[address]', {'label': 'Địa chỉ', 'value': orderDetail.getShipping('address'), 'id': 'user_address'}) }}
+                    
+                        {% if aff_name is defined and aff_name is not empty %}
+                            <hr>
+                            <div>Người giới thiệu: <b>{{ aff_name }}</b></div>
+                        {% endif %}
                     </div>
 
                     <div class="col-lg-7">
@@ -142,12 +147,18 @@
 
 
     {% include 'orders/__popup_template.volt' %}
-
+    
+    <script type="text/javascript">
+        var urls = {
+            'add_note': '{{ url.get({'for': 'order_addnote_ajax'}) }}'
+        }
+    </script>
     <script src="{{ url.get() }}/assets/js/add_order.js"></script>
     <script>
         $(document).ready(function(){
             order.itemsline = {{ orderDetail.getItems('JSON') }};
             order.discount = '{{ orderDetail.get_meta('discount') }}';
+            order.order_id = '{{ orderDetail.order_id }}';
             order.discount_note = '{{ orderDetail.get_meta('discount_note') }}';
             order.fee = {{ orderDetail.get_meta('fee_plus')|json_encode }};
             order.init();

@@ -1,6 +1,7 @@
 var dateData = new Date();
 var ajaxSearchProduct = false;
 var ajaxSearchTimeout = false;
+var jsonProductSelectCurrent = {};
 var order = {
     itemsline: [],
     total: 0,
@@ -51,6 +52,16 @@ var order = {
             }
         } else if(type === '+'){
             this.itemsline[index]['qty'] ++;
+        } else if(type === 'input'){
+            var vl = $(event.target).val();
+            vl = parseInt(vl);
+            if (vl >= 0) {
+                this.itemsline[index]['qty'] = vl;
+            } else {
+                alert('Giá trị phải lớn hơn 0');
+                this.itemsline[index]['qty'] = 1;
+            }
+
         }
 
         this.reload();
@@ -62,6 +73,11 @@ var order = {
         $.each(that.itemsline, function(index, productData){
             if (typeof productData  !== 'undefined' && productData && productData !== null) {
                 productData.index = index;
+
+                if (typeof productData.product_url != 'undefined') {
+                    productData.url = productData.product_url;
+                }
+
                 productData.price_format = numberFormat.to(productData.price *1);
                 productData.total_format = numberFormat.to(productData.price * productData.qty);
                 that.selectors.tableItem.prepend(nano(that.template.itemLine, productData));
@@ -134,6 +150,74 @@ var order = {
             this.reload();
         }
     },
+
+    changePriceOfProduct: function(event, index, form){
+        var that = this;
+        var $form = $(form);
+        var price_new = numberFormat.from($form.find('[name="price_new"]').val());
+        var note = $form.find('[name="note"]').val();
+
+        // SAVE
+        if (typeof that.itemsline[index] !== 'undefined') {
+            if (price_new > 0 && $.trim(note) !== '') {
+                that.itemsline[index]['price'] = price_new;
+
+                note = "Thay đổi giá "+ that.itemsline[index]['name'] +"<br> Từ<b>"+ that.itemsline[index]['price_format'] +"</b> từ  thành <b>"+ numberFormat.to(price_new) +"</b>. Ghi chú <i><b>" + note + '</b></i>';
+
+                event.preventDefault();
+                mApp.block($form, {
+                    overlayColor: '#000000',
+                    type: 'loader',
+                    state: 'primary',
+                    message: 'Đang xử lý...',
+                    opacity: 0.3
+                });
+
+                var data = $form.serialize();
+                $.ajax({
+                    url: urls.add_note,
+                    data: {
+                        note_content: note,
+                        order_id: that.order_id
+                    },
+                    type : 'post',
+                    dataType: 'json',
+                    success: function(res){
+                        $(document).trigger('loadNotes');
+                        mApp.unblock($form);
+                        $form.trigger('reset');
+                    }
+                })
+            }
+        }
+
+        that.reload();
+        $('#modal_change_price_of_product').modal('hide');
+
+        event.preventDefault();
+
+    },
+
+    changePriceOfProductPopup: function(event, index){
+        var that = this;
+
+        if (!(that.order_id > 0)) {
+            alert('Chỉ được thay đổi giá khi đơn hàng đã được tạo');
+            return false;
+        }
+
+        if (typeof that.itemsline[index] != 'undefined') {
+            var product = that.itemsline[index];
+            var html = $('#templatePopupEditPrice').html();
+            html = nano(html, product);
+
+            $('#modal_change_price_of_product').find('.modal-dialog').html(html);
+            $('#modal_change_price_of_product').modal('show');
+
+            $(".formatCurrency").number(true,0);
+        }
+
+    },
     addFee: function(event, targetEvent, el){
         var that = this;
         var data = $(targetEvent).data();
@@ -194,6 +278,10 @@ var order = {
         productData.index = d.getTime();
         productData.price_format = numberFormat.to(productData.price);
         productData.total_format = numberFormat.to(productData.total);
+        productData.sku = jsonProductSelectCurrent.sku;
+        productData.url = jsonProductSelectCurrent.url;
+        productData.image = jsonProductSelectCurrent.image;
+        productData.url = jsonProductSelectCurrent.url;
 
         order.itemsline.push(productData);
 
@@ -232,6 +320,7 @@ var order = {
     addProductByJson: function (event, el) {
         var json = $(el).find('.jsondata').text();
         json = JSON.parse(json);
+        jsonProductSelectCurrent = json;
         if(typeof json === 'object') {
             $('.js_product_name').val(json.name);
             $('.js_product_price').val(numberFormat.from(json.price));
@@ -269,6 +358,7 @@ var order = {
                             "name" : value.name,
                             "desc" : "",
                             "sku" : value.sku,
+                            "url" : value.url,
                             "price" : numberFormat.to(parseInt(value.price)),
                             "jsondata": JSON.stringify(value)
                         })
@@ -283,3 +373,8 @@ var order = {
 };
 
 
+
+
+
+$(document).ready(function(){
+});

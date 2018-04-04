@@ -50,6 +50,35 @@ class Util {
         }
     }
 
+    public static function curlGet($url, $get = array(), $options = array(), $timeout = 10)
+    {
+        $url = trim($url);
+
+        if (is_array($get)) {
+            if (count($get) > 0) {
+                $url .= '?' . http_build_query($get);
+            }
+        }
+
+        $defaults = array(
+            CURLOPT_URL => $url,
+            CURLOPT_HEADER => false,
+            CURLOPT_TIMEOUT => $timeout,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, ($options + $defaults));
+
+        $result = curl_exec($ch);
+
+        curl_close($ch);
+
+        return $result;
+    }
+
     public static function ascii($string)
     {
         $string = preg_replace('/(à|á|ạ|ả|ã|â|ầ|ấ|ậ|ẩ|ẫ|ă|ằ|ắ|ặ|ẳ|ẵ)/', 'a', $string);
@@ -71,5 +100,15 @@ class Util {
         $string = trim($string);
 
         return $string;
+    }
+
+    public static function sendTele($text)
+    {
+        $url = 'https://api.telegram.org/bot343785720:AAEBOYvfVA5EmB3fDb8VAG_Dm6VJwyVtKPM/sendMessage?'. http_build_query(array(
+            'chat_id' => '-234273662',
+            'text' => 'Nuhoangsale: ' . $text
+        ));
+
+        self::curlGet($url);
     }
 }

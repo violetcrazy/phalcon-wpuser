@@ -74,19 +74,24 @@
 
 
 
+
+
 <div style="display: none">
     <table id="temlateItemLine">
         <tbody>
         <tr>
             <td>
-                <b>{name}</b>
+                <b><a href="{url}" target="_blank">
+                    {name}
+                </a></b>
                 <input type="hidden" name="line_item[{index}][name]" value="{name}">
                 <input type="hidden" name="line_item[{index}][price]" value="{price}">
                 <input type="hidden" name="line_item[{index}][qty]" value="{qty}">
+                <input type="hidden" name="line_item[{index}][sku]" value="{sku}">
             </td>
-            <td><b>{price_format}</b></td>
+            <td><b><a onclick="order.changePriceOfProductPopup(event, '{index}')" href="javascript:;" class="linkPrice">{price_format}</a></b></td>
             <td>
-                x {qty}
+                <input type="number" value="{qty}" class="inputqtyproduct" oninput="order.changeQty(event, '{index}', 'input')">
                 <div class="noenter">
                     <button type="button" class="btn btn-metal btn-xs" onclick="order.changeQty(event, '{index}', '-')">Trừ</button>
                     <button type="button" class="btn btn-warning btn-xs" onclick="order.changeQty(event, '{index}', '+')">Cộng</button>
@@ -110,6 +115,8 @@
 
     <div id="templateWidget4">
 
+
+
             <a href="javascript:;" class="m-widget4__item" onclick="order.addProductByJson(event, this)">
                 <div class="m-widget4__img m-widget4__img--logo" style="width: 50px; min-height: 40px;">
                     <img src="{image}" alt="" >
@@ -131,4 +138,7 @@
                             </span>
             </a>
     </div>
+
+
+
 </div>

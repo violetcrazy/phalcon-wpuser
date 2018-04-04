@@ -17,30 +17,32 @@
             <div class="m-portlet__head-caption">
                 <div class="m-portlet__head-title">
                     <h3 class="m-portlet__head-text">
-                        Danh sách người dùng
+                        Danh sách người dùng ({{ users.total_items }})
                     </h3>
                 </div>
             </div>
             <div class="m-portlet__head-tools">
-
-                <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
-                    <li class="nav-item m-tabs__item">
-                        <input type="text" style="width: 150px;" class="form-control">
-                    </li>
-                    <li class="nav-item m-tabs__item">
-                        <select name="" style="width: 150px" id="" class="form-control">
-                            <option value="">Chọn vai trò</option>
-                        </select>
-                    </li>
-                    <li class="nav-item m-tabs__item">
-                        <select name="" style="width: 150px" id="" class="form-control">
-                            <option value="">Chọn Nhãn khách hàng</option>
-                        </select>
-                    </li>
-                    <li class="nav-item m-tabs__item">
-                        <button class="btn btn-success">Tìm kiếm</button>
-                    </li>
-                </ul>
+                <form action="">
+                    <ul class="nav nav-pills nav-pills--brand m-nav-pills--align-right m-nav-pills--btn-pill m-nav-pills--btn-sm" role="tablist">
+                        <li class="nav-item m-tabs__item">
+                            <input type="text" style="width: 150px;" class="form-control">
+                        </li>
+                        <li class="nav-item m-tabs__item">
+                            <select name="role" style="width: 150px" id="" class="form-control" onchange="form.submit()">
+                                <option value="">Chọn vai trò</option>
+                                {{ template.optionsStatusUser(request.getQuery('role', ['striptags', 'trim'], '')) }}
+                            </select>
+                        </li>
+                        <li class="nav-item m-tabs__item">
+                            <select name="" style="width: 150px" id="" class="form-control">
+                                <option value="">Chọn Nhãn khách hàng</option>
+                            </select>
+                        </li>
+                        <li class="nav-item m-tabs__item">
+                            <button class="btn btn-success">Tìm kiếm</button>
+                        </li>
+                    </ul>
+                </form>
             </div>
         </div>
         <div class="m-portlet__body">
@@ -76,6 +78,9 @@
                             <!--end::Widget 14 Item-->
                         {% endfor %}
 
+                        <hr>
+
+                        {{ template.pagination(users.total_pages , users.current, 3) }}
                     </div>
                     <!--end::Widget 14-->
                 </div>

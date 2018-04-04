@@ -18,7 +18,8 @@ class OrdersItem extends Model
     public $product_discount;
     public $product_note;
     public $customer_id;
-    public $saler_id;
+    public $product_url;
+    public $seller_id;
 
     public function initialize()
     {
@@ -38,7 +39,9 @@ class OrdersItem extends Model
             "product_discount" => $this->product_discount,
             "product_note" => $this->product_note,
             "customer_id" => $this->customer_id,
-            "saler_id" => $this->saler_id,
+            "seller_id" => $this->seller_id,
+            "product_url" => $this->product_url,
+            "product_image" => $this->product_image,
         );
 
         return $args;

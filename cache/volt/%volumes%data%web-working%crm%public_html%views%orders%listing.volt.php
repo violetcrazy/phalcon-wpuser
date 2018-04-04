@@ -302,30 +302,129 @@
 				<?= $this->flashSession->output() ?>
                 
 
-    <?= $this->template->openPortlet(['title' => 'Các đơn hàng', 'sub_title' => 'Tổng cộng <b>500</b> đơn hàng']) ?>
+    <?= $this->template->openPortlet(['body_nopadding' => true]) ?>
+<table class="table m-table m-table--head-bg-success text-left">
+    <thead>
+    <th>Đơn hàng mơi</th>
+    <th>Đang xử lý</th>
+    <th>Đang Ship</th>
+    <th>Đã hoàn thành</th>
+    <th>Đã hủy</th>
+    </thead>
+
+    <tr class="">
+        <td>
+            <b class="text-danger m--icon-font-size-lg1">
+                <?php if ((isset($statistic['count'][constant('\Common\Constant::ORDER_STATUS_DEFAULT')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['count'][constant('\Common\Constant::ORDER_STATUS_DEFAULT')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b>
+            order
+        </td>
+        <td>
+            <b class="text-info m--icon-font-size-lg1">
+                <?php if ((isset($statistic['count'][constant('\Common\Constant::ORDER_STATUS_PROCESSING')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['count'][constant('\Common\Constant::ORDER_STATUS_PROCESSING')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b>
+            order
+        </td>
+        <td>
+            <b class="text-warning m--icon-font-size-lg1">
+                <?php if ((isset($statistic['count'][constant('\Common\Constant::ORDER_STATUS_SHIPPING')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['count'][constant('\Common\Constant::ORDER_STATUS_SHIPPING')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b>
+            order
+        </td>
+        <td>
+            <b class="text-success m--icon-font-size-lg1">
+                <?php if ((isset($statistic['count'][constant('\Common\Constant::ORDER_STATUS_COMPLETE')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['count'][constant('\Common\Constant::ORDER_STATUS_COMPLETE')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b>
+            order
+        </td>
+        <td>
+            <b class="text-primary m--icon-font-size-lg1">
+                <?php if ((isset($statistic['count'][constant('\Common\Constant::ORDER_STATUS_CANCEL')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['count'][constant('\Common\Constant::ORDER_STATUS_CANCEL')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b>
+            order
+        </td>
+    </tr>
+
+    <tr class="">
+        <td>
+            <b class="text-danger m--icon-font-size-lg1">
+                <?php if ((isset($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_DEFAULT')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_DEFAULT')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b> đ
+        </td>
+        <td>
+            <b class="text-info m--icon-font-size-lg1">
+                <?php if ((isset($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_PROCESSING')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_PROCESSING')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b> đ
+        </td>
+        <td>
+            <b class="text-warning m--icon-font-size-lg1">
+                <?php if ((isset($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_SHIPPING')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_SHIPPING')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b> đ
+        </td>
+        <td>
+            <b class="text-success m--icon-font-size-lg1">
+                <?php if ((isset($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_COMPLETE')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_COMPLETE')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b> đ
+        </td>
+        <td>
+            <b class="text-primary m--icon-font-size-lg1">
+                <?php if ((isset($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_CANCEL')]))) { ?>
+                    <?= $this->util->currencyFormat($statistic['sum'][constant('\Common\Constant::ORDER_STATUS_CANCEL')]) ?>
+                <?php } else { ?>
+                    0
+                <?php } ?>
+            </b> đ
+        </td>
+    </tr>
+
+</table>
+<?= $this->template->closePortlet() ?>
+
+    <?= $this->template->openPortlet(['title' => 'Các đơn hàng', 'sub_title' => 'Tổng cộng <b>' . $result->total_items . '</b> đơn hàng']) ?>
 
         <div class="topFilter m--margin-bottom-20">
             <form action="" class="">
-                <div class="pull-left">
-
-                    <div class=" m--block-inline">
-                        <select name="" id="" class="form-control">
-                            <option value="">Thao tác</option>
-                            <option value="">Từ chối</option>
-                            <option value="">Xóa</option>
-                        </select>
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
+                        <input type="number" value="<?= $this->request->getQuery('order_id', ['int'], '') ?>" name="order_id" class="form-control" placeholder="ID đơn hàng">
                     </div>
-                    <div class=" m--block-inline">
-                        <button class="btn btn-accent">Áp dụng</button>
-                    </div>
-                </div>
-
-                <div class="pull-right">
-                    <div class=" m--block-inline">
-                        <input type="number" value="<?= $this->request->getQuery('order_id', ['int'], '') ?>" name="order_id" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
-                    </div>
-
-                    <div class=" m--block-inline">
+                    <div class="col-md-4 col-lg-3">
                         <select name="date_range" id="" class="form-control" onchange="form.submit()">
                             <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == '' ? 'selected' : '') ?> value="">Chọn ngày</option>
                             <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == 'now' ? 'selected' : '') ?> value="now">Trong ngày</option>
@@ -336,23 +435,52 @@
                             <option <?= ($this->request->getQuery('date_range', ['striptags', 'trim'], '') == '30dayago' ? 'selected' : '') ?> value="30dayago">30 ngày trước</option>
                         </select>
                     </div>
-
-                    <div class=" m--block-inline">
+                    <div class="col-md-4 col-lg-3">
                         <select name="status" id="" class="form-control" onchange="form.submit()">
                             <?= $this->template->optionsStatusOrder($this->request->getQuery('status')) ?>
                         </select>
                     </div>
-                    <div class=" m--block-inline">
+                    <div class="col-md-4 col-lg-3">
                         <select name="sort" id="" class="form-control" onchange="form.submit()">
                             <option value="">Sắp xếp</option>
                             <option <?= ($this->request->getQuery('sort', ['striptags', 'trim'], '') == 'create' ? 'selected' : '') ?> value="create">Ngày tạo</option>
                             <option <?= ($this->request->getQuery('sort', ['striptags', 'trim'], '') == 'update' ? 'selected' : '') ?> value="update">Ngày cập nhật</option>
                         </select>
                     </div>
-                    <div class=" m--block-inline">
-                        <button class="btn btn-primary">Áp dụng</button>
+                </div>
+
+                <div class="row m--margin-top-15">
+                    <div class="col-md-4 col-lg-3">
+                        <div>Người phụ trách</div>
+                        <select class="form-control selectCskh" id="" name="seller_id" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
+                            <?php if ((isset($seller))) { ?>
+                                <option value="<?= $seller['ID'] ?>"><?= $seller['name'] ?> - <?= $seller['phone'] ?> - <?= $seller['address'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div>Khách hàng</div>
+                        <select class="form-control selectCskh" id="" name="customer_id" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
+                            <?php if ((isset($customer))) { ?>
+                                <option value="<?= $customer['ID'] ?>"><?= $customer['name'] ?> - <?= $customer['phone'] ?> - <?= $customer['address'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div>Nhân viên tiếp thị</div>
+                        <select class="form-control selectCskh" id="" name="aff_id" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
+                            <?php if ((isset($aff))) { ?>
+                                <option value="<?= $aff['ID'] ?>"><?= $aff['name'] ?> - <?= $aff['phone'] ?> - <?= $aff['address'] ?></option>
+                            <?php } ?>
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div>&#06</div>
+                        <button class="btn-block btn btn-primary">Áp dụng</button>
                     </div>
                 </div>
+
+                <div class="clearfix"></div>
             </form>
             <div class="clearfix"></div>
         </div>
@@ -388,7 +516,7 @@
                                 (<b class="m--icon-font-size-sm2"><?= $order->total_qty ?></b> sản phẩm)
                             </td>
                             <td>
-                                <a href=""><span><?= $order->customer_name ?></span></a>
+                                <a href=""><span>#<?= $order->customer_id ?> <?= $order->customer_name ?></span></a>
                             </td>
                             <td>
                                 <span><?= $this->util->formatDat($order->created_at) ?></span>

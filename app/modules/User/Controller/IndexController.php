@@ -80,20 +80,39 @@ class IndexController extends BaseController
     {
         
         $page = $this->request->getQuery('page', array('striptags', 'int'), 1);
+        $role = $this->request->getQuery('role', array('striptags', 'trim'), '');
+
         $UserHelper = new UserHelper();
-        $users = $UserHelper->getUsersPagination(array(
+
+        $argsQuery = array(
             'page' => $page
-        ));
-        
-        $outDebug = [];
+        );
+
+        if (!empty($role)) {
+            $argsQuery['meta']['role'] = array($role);
+        }
+
+        $users = $UserHelper->getUsersPagination($argsQuery);
+
         $setupData = new UserSetupData();
+        $result = array();
         foreach ($users->items as $user){
-            $users->result[] = $setupData->setup_user_class($user);
-            $outDebug[] = $setupData->setup_user_class($user)->toArray();
+            $result[] = $setupData->setup_user_class($user);
         }
         unset($users->items);
 
-        $this->view->users = $users;
+        $output = new \stdClass();
+        $output->first = $users->first;
+        $output->before = $users->before;
+        $output->current = $users->current;
+        $output->last = $users->last;
+        $output->next = $users->next;
+        $output->total_pages = $users->total_pages;
+        $output->total_items = $users->total_items;
+        $output->limit = $users->limit;
+        $output->result = $result;
+
+        $this->view->users = $output;
 
         $this->view->pick('user/listing');
     }

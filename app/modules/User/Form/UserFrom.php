@@ -18,6 +18,10 @@ class UserFrom extends FormApp
         $field->setLabel('Slug');
         $this->add($field);
 
+        $field = new Text('user_login', array('disabled' => true, 'class' => 'form-control'));
+        $field->setLabel('Tên đăng nhập');
+        $this->add($field);
+
         $field = new Text('display_name', ['required' => true, 'class' => 'form-control']);
         $field->addValidator(new PresenceOf([
             'message' => 'Tên người dùng không đươc bỏ trống'

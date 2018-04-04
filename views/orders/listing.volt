@@ -2,30 +2,17 @@
 
 {% block content %}
 
-    {{ template.openPortlet({"title": "Các đơn hàng", "sub_title": "Tổng cộng <b>500</b> đơn hàng"}) }}
+    {% include 'orders/__statistic_in_list.volt' %}
+
+    {{ template.openPortlet({"title": "Các đơn hàng", "sub_title": "Tổng cộng <b>" ~ result.total_items ~ "</b> đơn hàng"}) }}
 
         <div class="topFilter m--margin-bottom-20">
             <form action="" class="">
-                <div class="pull-left">
-
-                    <div class=" m--block-inline">
-                        <select name="" id="" class="form-control">
-                            <option value="">Thao tác</option>
-                            <option value="">Từ chối</option>
-                            <option value="">Xóa</option>
-                        </select>
+                <div class="row">
+                    <div class="col-md-4 col-lg-3">
+                        <input type="number" value="{{ request.getQuery('order_id', ['int'], '') }}" name="order_id" class="form-control" placeholder="ID đơn hàng">
                     </div>
-                    <div class=" m--block-inline">
-                        <button class="btn btn-accent">Áp dụng</button>
-                    </div>
-                </div>
-
-                <div class="pull-right">
-                    <div class=" m--block-inline">
-                        <input type="number" value="{{ request.getQuery('order_id', ['int'], '') }}" name="order_id" class="form-control" style="width: 160px" placeholder="ID đơn hàng">
-                    </div>
-
-                    <div class=" m--block-inline">
+                    <div class="col-md-4 col-lg-3">
                         <select name="date_range" id="" class="form-control" onchange="form.submit()">
                             <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "" ? "selected" : "" }} value="">Chọn ngày</option>
                             <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "now" ? "selected" : "" }} value="now">Trong ngày</option>
@@ -36,23 +23,52 @@
                             <option {{ request.getQuery('date_range', ['striptags', 'trim'], '') == "30dayago" ? "selected" : "" }} value="30dayago">30 ngày trước</option>
                         </select>
                     </div>
-
-                    <div class=" m--block-inline">
+                    <div class="col-md-4 col-lg-3">
                         <select name="status" id="" class="form-control" onchange="form.submit()">
                             {{ template.optionsStatusOrder(request.getQuery('status')) }}
                         </select>
                     </div>
-                    <div class=" m--block-inline">
+                    <div class="col-md-4 col-lg-3">
                         <select name="sort" id="" class="form-control" onchange="form.submit()">
                             <option value="">Sắp xếp</option>
                             <option {{ request.getQuery('sort', ['striptags', 'trim'], '') == "create" ? "selected" : "" }} value="create">Ngày tạo</option>
                             <option {{ request.getQuery('sort', ['striptags', 'trim'], '') == "update" ? "selected" : "" }} value="update">Ngày cập nhật</option>
                         </select>
                     </div>
-                    <div class=" m--block-inline">
-                        <button class="btn btn-primary">Áp dụng</button>
+                </div>
+
+                <div class="row m--margin-top-15">
+                    <div class="col-md-4 col-lg-3">
+                        <div>Người phụ trách</div>
+                        <select class="form-control selectCskh" id="" name="seller_id" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
+                            {% if (seller is defined) %}
+                                <option value="{{ seller['ID'] }}">{{ seller['name'] }} - {{ seller['phone'] }} - {{ seller['address'] }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div>Khách hàng</div>
+                        <select class="form-control selectCskh" id="" name="customer_id" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
+                            {% if (customer is defined) %}
+                                <option value="{{ customer['ID'] }}">{{ customer['name'] }} - {{ customer['phone'] }} - {{ customer['address'] }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div>Nhân viên tiếp thị</div>
+                        <select class="form-control selectCskh" id="" name="aff_id" data-url="{{ url.get({'for': 'user_ajax_list'}) }}">
+                            {% if (aff is defined) %}
+                                <option value="{{ aff['ID'] }}">{{ aff['name'] }} - {{ aff['phone'] }} - {{ aff['address'] }}</option>
+                            {% endif %}
+                        </select>
+                    </div>
+                    <div class="col-md-4 col-lg-3">
+                        <div>&#06</div>
+                        <button class="btn-block btn btn-primary">Áp dụng</button>
                     </div>
                 </div>
+
+                <div class="clearfix"></div>
             </form>
             <div class="clearfix"></div>
         </div>
@@ -88,7 +104,7 @@
                                 (<b class="m--icon-font-size-sm2">{{ order.total_qty }}</b> sản phẩm)
                             </td>
                             <td>
-                                <a href=""><span>{{ order.customer_name }}</span></a>
+                                <a href=""><span>#{{ order.customer_id }} {{ order.customer_name }}</span></a>
                             </td>
                             <td>
                                 <span>{{ util.formatDat(order.created_at) }}</span>

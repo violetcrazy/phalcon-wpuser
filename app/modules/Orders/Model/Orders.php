@@ -124,7 +124,7 @@ class Orders extends Model
         if ($this->payment_status != 'paid') {
             $this->payment_status = 'hold';
         }
-        if ($this->payment_title != '') {
+        if ($this->payment_title == '') {
             $this->payment_title = 'COD';
         }
     }
@@ -138,8 +138,8 @@ class Orders extends Model
         if ($this->payment_status != 'paid') {
             $this->payment_status = 'hold';
         }
-        if ($this->payment_title != '') {
-            $this->payment_status = 'COD';
+        if ($this->payment_title == '') {
+            $this->payment_title = 'COD';
         }
 
 

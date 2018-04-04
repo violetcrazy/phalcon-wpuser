@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="WebServers">
+    <option name="servers">
+      <webServer id="80cd29c9-a316-4227-a788-cc58b56e8b25" name="order.nuhoangsale" url="http://order.nuhoangsale.com">
+        <fileTransfer host="order.nuhoangsale.com" port="21" rootFolder="/public_html/order">
+          <advancedOptions>
+            <advancedOptions dataProtectionLevel="Private" passiveMode="true" />
+          </advancedOptions>
+          <option name="port" value="21" />
+        </fileTransfer>
+      </webServer>
+    </option>
+  </component>
+</project>

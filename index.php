@@ -233,18 +233,18 @@ class Bootstrap
         $view->start();
 
         $registry = $this->di['registry'];
-        if (ENV != 'dev') {
+        if (ENV == 'dev') {
             $debug = new \Phalcon\Debug();
             $debug->listen();
-
             $dispatcher->dispatch();
         } else {
             try {
                 $dispatcher->dispatch();
             } catch (\Phalcon\Exception $e) {
                 // Errors catching
-                
                 $view->e = $e;
+                $view->setViewsDir(ROOT . '/views/');
+                $view->setPartialsDir('');
 
                 if ($e instanceof \Phalcon\Mvc\Dispatcher\Exception) {
                     $response->setStatusCode(404, 'Not Found');

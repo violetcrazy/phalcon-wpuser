@@ -58,7 +58,7 @@
                         </ul>
                         <div class="m-portlet__body-separator"></div>
                         <div class="m-widget1 m-widget1--paddingless">
-                            <div class="m-widget1__item">
+                            <!-- <div class="m-widget1__item">
                                 <div class="row m-row--no-padding align-items-center">
                                     <div class="col">
                                         <h3 class="m-widget1__title">
@@ -91,7 +91,7 @@
                                         </span>
                                     </div>
                                 </div>
-                            </div>
+                            </div> -->
 
                         </div>
                     </div>
@@ -118,6 +118,7 @@
                             <form class="m-form m-form--fit m-form--label-align-right" method="post">
                                 <div class="m-portlet__body">
                                     {{ form.renderDecoratedInline('ID') }}
+                                    {{ form.renderDecoratedInline('user_login') }}
                                     {{ form.renderDecoratedInline('display_name') }}
                                     {{ form.renderDecoratedInline('user_nicename') }}
                                     {{ form.renderDecoratedInline('user_phone') }}

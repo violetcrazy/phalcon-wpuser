@@ -8,6 +8,16 @@ class Routes
 
     public function init($router)
     {
+        // $router->add('/thong-ke/tong-quan{query:(/.*)*}', array(
+        //     'module' => 'orders',
+        //     'controller' => 'statistic',
+        //     'action' => 'index',
+        //     'auth' => true,
+        //     'parent' => 0,
+        //     'show_in_menu' => 1,
+        //     'title_menu' => 'Thống kê',
+        //     'icon_menu' => 'flaticon-graph'
+        // ))->setName('order_statistic_index');
 
         $router->add('/', array(
             'module' => 'orders',

@@ -357,7 +357,7 @@
 
                             <div class="col-9">
                                 <select <?= ($orderDetail->status != constant('\Common\Constant::ORDER_STATUS_DEFAULT') ? 'disabled' : '') ?>  class="form-control selectCskh" id="" name="customer_id" data-url="<?= $this->url->get(['for' => 'user_ajax_list']) ?>">
-                                    <?php if (($seller)) { ?>
+                                    <?php if (($customer)) { ?>
                                         <option value="<?= $customer['ID'] ?>"><?= $customer['name'] ?> - <?= $customer['phone'] ?> - <?= $customer['address'] ?></option>
                                     <?php } ?>
                                 </select>
@@ -373,6 +373,11 @@
                         <?= $this->callMacro('formGroupText', ['shipping[phone]', ['label' => 'Điện thoại', 'value' => $orderDetail->getShipping('phone'), 'id' => 'user_phone']]) ?>
                         <?= $this->callMacro('formGroupText', ['shipping[email]', ['label' => 'Email', 'value' => $orderDetail->getShipping('email'), 'id' => 'user_email']]) ?>
                         <?= $this->callMacro('formGroupText', ['shipping[address]', ['label' => 'Địa chỉ', 'value' => $orderDetail->getShipping('address'), 'id' => 'user_address']]) ?>
+                    
+                        <?php if (isset($aff_name) && !empty($aff_name)) { ?>
+                            <hr>
+                            <div>Người giới thiệu: <b><?= $aff_name ?></b></div>
+                        <?php } ?>
                     </div>
 
                     <div class="col-lg-7">
@@ -452,19 +457,24 @@
 
 
 
+
+
 <div style="display: none">
     <table id="temlateItemLine">
         <tbody>
         <tr>
             <td>
-                <b>{name}</b>
+                <b><a href="{url}" target="_blank">
+                    {name}
+                </a></b>
                 <input type="hidden" name="line_item[{index}][name]" value="{name}">
                 <input type="hidden" name="line_item[{index}][price]" value="{price}">
                 <input type="hidden" name="line_item[{index}][qty]" value="{qty}">
+                <input type="hidden" name="line_item[{index}][sku]" value="{sku}">
             </td>
-            <td><b>{price_format}</b></td>
+            <td><b><a onclick="order.changePriceOfProductPopup(event, '{index}')" href="javascript:;" class="linkPrice">{price_format}</a></b></td>
             <td>
-                x {qty}
+                <input type="number" value="{qty}" class="inputqtyproduct" oninput="order.changeQty(event, '{index}', 'input')">
                 <div class="noenter">
                     <button type="button" class="btn btn-metal btn-xs" onclick="order.changeQty(event, '{index}', '-')">Trừ</button>
                     <button type="button" class="btn btn-warning btn-xs" onclick="order.changeQty(event, '{index}', '+')">Cộng</button>
@@ -488,6 +498,8 @@
 
     <div id="templateWidget4">
 
+
+
             <a href="javascript:;" class="m-widget4__item" onclick="order.addProductByJson(event, this)">
                 <div class="m-widget4__img m-widget4__img--logo" style="width: 50px; min-height: 40px;">
                     <img src="{image}" alt="" >
@@ -509,6 +521,9 @@
                             </span>
             </a>
     </div>
+
+
+
 </div>
                     </div>
                 </div>
@@ -661,11 +676,83 @@
 </div>
 
 
+
+
+<div class="modal fade" id="modal_change_price_of_product" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-md" role="document">
+        
+    </div>
+</div>
+
+<div style="display: none">
+    <div id="templatePopupEditPrice">
+        <form onsubmit="order.changePriceOfProduct(event, '{index}', this)">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">
+                        Thay đổi giá của sản phẩm
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">
+                                &times;
+                            </span>
+                    </button>
+                </div>
+                <div class="modal-body">
+
+                    <div class="form-group">
+                        <label for="recipient-name" class="form-control-label">
+                            Giá mới sẽ áp dụng cho đơn hàng này <br>
+                            <b>{name}</b>
+                        </label>
+                        <div class="input-group m-input-group m-input-group--air">
+                            <div class="input-group-prepend">
+                                <span class="input-group-text" id="basic-addon1">
+                                    {price_format}
+                                </span>
+                            </div>
+                            <input
+                                name="price_new"
+                                type="text" class="form-control m-input formatCurrency"
+                                placeholder="Giá mới" aria-describedby="basic-addon1">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="message-text" class="form-control-label">
+                            Lý do thay đổi. (BẮT BUỘC)
+                        </label>
+                        <textarea
+                            name="note"
+                            class="form-control" id="message-text"></textarea>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Đóng lại
+                    </button>
+                    <button type="submit" class="btn btn-primary">
+                        Lưu thay đổi
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
+
+
+    
+    <script type="text/javascript">
+        var urls = {
+            'add_note': '<?= $this->url->get(['for' => 'order_addnote_ajax']) ?>'
+        }
+    </script>
     <script src="<?= $this->url->get() ?>/assets/js/add_order.js"></script>
     <script>
         $(document).ready(function(){
             order.itemsline = <?= $orderDetail->getItems('JSON') ?>;
             order.discount = '<?= $orderDetail->get_meta('discount') ?>';
+            order.order_id = '<?= $orderDetail->order_id ?>';
             order.discount_note = '<?= $orderDetail->get_meta('discount_note') ?>';
             order.fee = <?= json_encode($orderDetail->get_meta('fee_plus')) ?>;
             order.init();

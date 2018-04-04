@@ -14,7 +14,7 @@ class UserHelper extends User {
 
         $b = $this->getModelsManager()->createBuilder();
         $b->columns(array(
-            "ID",
+            "DISTINCT(ID) as ID",
             "user_login",
             "user_nicename",
             "user_email",
@@ -27,8 +27,8 @@ class UserHelper extends User {
             "user_address"
         ));
 
-
         $b->from(array('u'=> 'User\Model\User'));
+        $b->leftJoin('User\Model\UserMeta', 'u.ID = um.user_id', 'um');
 
         $search = isset($args['search']) ? $args['search']  : false;
         if (is_array($search)) {
@@ -44,9 +44,18 @@ class UserHelper extends User {
             $b->andWhere("u.user_phone LIKE '%{$args['user_phone']}%' ");
         }
 
-        if (isset($args['meta']) && count($args['meta']) > 0) {
+        $userCurrent = $this->getDI()->getSession()->get('AUTH');
+        $userCurrentModel = User::findFirst("ID = '{$userCurrent['ID']}'");
+        if ($userCurrentModel) {
+            $roles = $userCurrentModel->getChildsRule();
+            $roles = implode("','", $roles);
+            $b->andWhere(
+                "(um.meta_key = 'role' AND um.meta_value IN ('{$roles}'))"
+            );
+        }
 
-            $b->leftJoin('User\Model\UserMeta', 'u.ID = um.user_id', 'um');
+
+        if (isset($args['meta']) && count($args['meta']) > 0) {
 
             if (isset($args['meta']['role'])) {
                 if (is_array($args['meta']['role'])) {
@@ -54,17 +63,17 @@ class UserHelper extends User {
                 } else {
                     $role = array($args['meta']['role']);
                 }
-                $role = implode(',', $role);
+                $role = implode("','", $role);
 
                 $b->andWhere(
-                "(um.meta_key = 'role' AND um.meta_value = '') OR (um.meta_key = 'role' AND um.meta_value IN ('{$role}'))"
+                "(um.meta_key = 'role' AND um.meta_value IN ('{$role}'))"
                 );
             }
         }
 
-
         $b->orderBy('u.ID DESC');
 
+//        echo $b->getQuery()->getSql()['sql']; die;
         $paginator = new QueryBuilder(array(
             'builder' => $b,
             'page' => $page,

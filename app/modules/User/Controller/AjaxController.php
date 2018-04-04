@@ -26,13 +26,6 @@ class AjaxController extends BaseController
     public function listAction()
     {
 
-//        $users = User::find();
-//        foreach ($users as $u){
-//            $u->user_address = $u->getMeta('billing_address_1');
-//            $u->update();
-//        }
-//        die;
-
         $page = $this->request->getQuery('page', array('int'), 1);
         $type = $this->request->getQuery('datatable', array('striptags', 'trim'), false);
         $q = $this->request->getQuery('q', array('striptags', 'trim'), '');
@@ -41,9 +34,6 @@ class AjaxController extends BaseController
         $userHelper = new UserHelper();
         $users = $userHelper->getUsersPagination(array(
             'page' => $page,
-            'meta' => array(
-                'role' => 'customer'
-            ),
             'search' => array(
                 'key' => $q,
                 'fields' => array(

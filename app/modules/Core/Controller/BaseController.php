@@ -2,6 +2,7 @@
 
 namespace Core\Controller;
 
+use Common\Constant;
 use Phalcon\Exception;
 use \Phalcon\Mvc\Controller;
 use User\Model\User;
@@ -67,6 +68,19 @@ class BaseController extends Controller
                     'id' => $auth['ID']
                 )
             ));
+
+            if (!$userModel->can(Constant::USER_MEMBER_BOSS) || $userModel->can(Constant::USER_MEMBER_STAFF)){
+                $this->session->destroy('AUTH');
+                $auth = $this->cookies->get('AUTH');
+                $auth->delete();
+
+                $this->flashSession->error('Tài khoản không được phép truy cập');
+
+                $this->response->redirect(array(
+                    'for' => 'auth_login',
+                ));
+            }
+
             $this->userCurrent = $userModel;
             $this->view->userCurrent = $userModel;
         }

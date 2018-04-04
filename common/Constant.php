@@ -6,7 +6,8 @@ class Constant {
     const ORDER_STATUS_DEFAULT = 'new_order';
     const ORDER_STATUS_COMPLETE = 'complete';
     const ORDER_STATUS_CANCEL = 'cancel';
-    const ORDER_STATUS_PROCESSING = 'info';
+    const ORDER_STATUS_PROCESSING = 'processing';
+    const ORDER_STATUS_SHIPPING= 'shipping';
     const LIMIT_LISTING = 5;
 
     const ORDER_NOTE_TYPE_SHARE = 1;
@@ -21,15 +22,11 @@ class Constant {
     const USER_MEMBER_LEADER = 'leader';
     const USER_MEMBER_SELLER = 'seller';
     const USER_MEMBER_SUPPORTER = 'supporter';
+    const USER_MEMBER_STAFF = 'staff';
 
 
     public static function getUserLabel($key = '', $onlyLabel = false){
         $status = array(
-            self::USER_MEMBER_CUSTOMER => array(
-                'label' => 'Khách hàng',
-                'class' => 'm-badge m-badge--wide m-badge--danger',
-                'color' => 'danger'
-            ),
             self::USER_MEMBER_BOSS => array(
                 'label' => 'Boss',
                 'class' => 'm-badge m-badge--wide m-badge--info',
@@ -52,6 +49,16 @@ class Constant {
             ),
             self::USER_MEMBER_SELLER => array(
                 'label' => 'Bán hàng',
+                'class' => 'm-badge m-badge--wide m-badge--secondary',
+                'color' => 'secondary'
+            ),
+            self::USER_MEMBER_CUSTOMER => array(
+                'label' => 'Khách hàng',
+                'class' => 'm-badge m-badge--wide m-badge--danger',
+                'color' => 'danger'
+            ),
+            self::USER_MEMBER_STAFF => array(
+                'label' => 'Nhân viên nội bộ',
                 'class' => 'm-badge m-badge--wide m-badge--secondary',
                 'color' => 'secondary'
             )
@@ -83,7 +90,7 @@ class Constant {
                 'class' => 'm-badge m-badge--wide m-badge--info',
                 'color' => 'info'
             ),
-            'shipping' => array(
+            self::ORDER_STATUS_SHIPPING => array(
                 'label' => 'Vận chuyển',
                 'class' => 'm-badge m-badge--wide m-badge--warning',
                 'color' => 'warning'

@@ -252,4 +252,43 @@ class User extends Model
 
         return $output;
     }
+
+    public function can($permission) {
+        $roles = $this->getMeta('role', false);
+
+        if (in_array($permission, $roles)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function getChildsRule()
+    {
+        $role = $this->getMeta('role', false);
+        $roles = Constant::getUserLabel();
+        if (in_array(Constant::USER_MEMBER_BOSS, $role)) {
+            return array_keys($roles);
+        } elseif(in_array(Constant::USER_MEMBER_MANAGER, $role)) {
+            unset($roles[Constant::USER_MEMBER_BOSS]);
+            return array_keys($roles);
+        } elseif(in_array(Constant::USER_MEMBER_LEADER, $role)) {
+            unset($roles[Constant::USER_MEMBER_BOSS]);
+            unset($roles[Constant::USER_MEMBER_MANAGER]);
+            return array_keys($roles);
+        } elseif(in_array(Constant::USER_MEMBER_CUSTOMER, $role)) {
+            unset($roles[Constant::USER_MEMBER_BOSS]);
+            unset($roles[Constant::USER_MEMBER_MANAGER]);
+            unset($roles[Constant::USER_MEMBER_LEADER]);
+            return array_keys($roles);
+        } elseif(in_array(Constant::USER_MEMBER_SUPPORTER, $role)) {
+            unset($roles[Constant::USER_MEMBER_BOSS]);
+            unset($roles[Constant::USER_MEMBER_MANAGER]);
+            unset($roles[Constant::USER_MEMBER_LEADER]);
+            return array_keys($roles);
+        } else {
+            return array(Constant::USER_MEMBER_CUSTOMER);
+        }
+    }
+
 }

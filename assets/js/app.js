@@ -5,7 +5,7 @@ $(document).ready(function(){
     $(".enSelect2").select2({});
 
     $(".selectCskh").select2({
-        placeholder: "Tìm nhân viên",
+        placeholder: "Tìm tài khoản",
         allowClear: true,
         ajax: {
             url: $(".selectCskh").data('url'),
@@ -23,6 +23,6 @@ $(document).ready(function(){
         escapeMarkup: function(markup) {
             return markup;
         }, // let our custom formatter work
-        minimumInputLength: 1,
+        minimumInputLength: 1
     });
-})
+});
