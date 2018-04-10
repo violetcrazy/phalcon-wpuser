@@ -15,6 +15,7 @@ if (isset($_SERVER['ENV'])) {
 define('ENV', $applicationEnv);
  
 // 
+require_once 'vendor/autoload.php';
 
 class Bootstrap
 {

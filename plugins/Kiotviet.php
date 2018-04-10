@@ -3,24 +3,58 @@ namespace Plugins;
 
 
 use Common\Util;
+use Common\Constant;
+use Core\Model\Options;
 use Orders\Model\Orders;
 
 class Kiotviet
 {
-	const TOKEN = 'Bearer eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJuYmYiOjE1MjI4MzI4MjgsImV4cCI6MTUyMjkxOTIyOCwiaXNzIjoiaHR0cDovL2lkLmtpb3R2aWV0LnZuIiwiYXVkIjpbImh0dHA6Ly9pZC5raW90dmlldC52bi9yZXNvdXJjZXMiLCJLaW90VmlldC5BcGkuUHVibGljIl0sImNsaWVudF9pZCI6IjM0ZDMzMTIzLTM4ZDctNGZmNC04YTBmLTg3MjQyYTgyOTA3OCIsImNsaWVudF9SZXRhaWxlckNvZGUiOiJuZ2hpYXRoYWliaW5oZHVvbmciLCJjbGllbnRfUmV0YWlsZXJJZCI6IjEwMjAyNiIsImNsaWVudF9Vc2VySWQiOiIxMTcyOCIsInNjb3BlIjpbIlB1YmxpY0FwaS5BY2Nlc3MiXX0.yl2FW9OltQzThS8TTqWzW4yKaM1E3KyMZBPJPYRm6H8SSPn0DfuYHttcfspvnZsSnm3aO9wy2OoMi8qth0xtwAouZV3cWXA7mINsVnlqF33NFGJh_Ipi7hadfcR_MH1xkJ9MgJ9SBm-Tvy_nbriBml3K970gLdyz7-IIHIvlDDSXh4BrBaqpUsCf2Jtx_2iSeblO1Br22Avu9En7lyLvUKk2wEBMVBFiv-4ph-ZCoE9U1W5spfaalIgeA2UUdNiYo1BM_Cz6wyCJrDOMCr6CRIoN5EdMQCs51szvXG6malLodxtooRo5__yU5kUOjH5kna7R8U6vNtsCmaPnf_8PVw';
-
 	const RETAILER = 'nghiathaibinhduong';
-
     const branchName = "WEB";
     const branchId = 80160;
-    const retailerId = '102026';
+    const retailerId = 102026;
+    const clientID = "c66e109b-e5f3-4188-9f1c-535f6ab7c7aa";
+    const secret = "A066282DCC85E3A287DD6A8DF85F325B32A0E80F";
 
     public static $status = array(
         1 => 'Phiếu tạm',   
+        3 => 'Đang giao hàng',   
         3 => 'Hoàn thành',   
         4 => 'Đã hủy',   
     );
 
+    public static function checkToken()
+    {
+        $token = Options::getOption('kiotviet_token');
+        $expires = (int)Options::getOption('kiotviet_expires');
+
+        $time = time();
+
+        if (($time + 3600 > $expires) || empty($token)){
+
+            $url = "https://id.kiotviet.vn/connect/token";
+            $post = array(
+                "scopes" => "PublicApi.Access",
+                "grant_type" => "client_credentials",
+                "client_id" => self::clientID,
+                "client_secret" => self::secret
+            );
+
+            $_res = Util::curlPost($url, $post);
+
+            $res = json_decode($_res, true);
+            if (isset($res['access_token'])) {
+                $token = $res['token_type'] . ' ' . $res['access_token'];
+                
+                Options::saveOption('kiotviet_token',  $token);
+                Options::saveOption('kiotviet_expires', time() + $res['expires_in']);
+            } else {
+                Util::sendTele('Tạo token lỗi: ' . $_res);
+            }
+        }
+
+        return $token;
+    }
 
     public static function createOrder($orderId)
     {
@@ -30,56 +64,99 @@ class Kiotviet
         $orderDetail = Orders::findFirst("order_id = '{$orderId}'");
         if (!$orderDetail) return false;
 
+        switch ($orderDetail->status) {
+            case Constant::ORDER_STATUS_DEFAULT:
+            case Constant::ORDER_STATUS_KIOTVIETTRANS:
+                $status = 1;
+                break;
+            case Constant::ORDER_STATUS_COMPLETE:
+                $status = 3;
+                break;
+            case Constant::ORDER_STATUS_CANCEL:
+                $status = 4;
+                break;
+            case Constant::ORDER_STATUS_PROCESSING:
+                $status = 1;
+                break;
+            case Constant::ORDER_STATUS_SHIPPING:
+                $status = 2;
+                break;
+            default:
+                $status = 1;
+                break;
+        }
+
         $dataOrder = array(
  	       "branchId" => self::branchId,
            "retailerId" => self::retailerId,
 
  	       "total" => 0,
- 	       "totalPayment" => 0,
- 	       "status" => 1,
+ 	       "status" => (int)$status,
  	       
- 	       "usingCod" => false,
- 	       "description" => "Đơn hàng từ hệ thôngs WOO",
+ 	       "description" => "Đơn hàng từ hệ thống WOO",
 
-           "discount" => $orderDetail->get_meta('discount'),
+           "discount" => (int)$orderDetail->get_meta('discount'),
  	       "orderDetails" => array()
         );
+
+        $url = "https://public.kiotapi.com/orders";
+        $optionsCurl = array();
+        $idKiotviet = (int)$orderDetail->get_meta('kiotviet_id');
+        if ($idKiotviet > 0) {
+            $dataOrder['id'] = $idKiotviet;
+            $optionsCurl['custom_method'] = 'PUT';
+            $url .= "/{$idKiotviet}";
+        }
 
         $items = $orderDetail->getItems();
         if (count($items)) {
             foreach ($items as $key => $value) {
                 $dataOrder["orderDetails"][] = array(
-                    "productCode" => $value['product_sku'],
-                    "productName" => $value['product_name'],
-                    "quantity" => $value['product_qty'],
-                    "price" => $value['product_price'],
+                    "productCode" => $value['sku'],
+                    "productName" => $value['name'],
+                    "quantity" => (int)$value['qty'],
+                    "price" => (int)$value['price'],
                 );
 
-                $dataOrder['total'] += $value['product_qty'] * $value['product_price'];
+                $dataOrder['total'] += (int)($value['qty'] * $value['price']);
             }
         }
 
-        $dataOrder['totalPayment'] = $dataOrder['total'];
-
-        $dataOrder['“customer'] = array(
+        $dataOrder["customer"] = array(
             "name" => $orderDetail->getBilling('name'),
             "contactNumber" => $orderDetail->getBilling('phone'),
             "address" => $orderDetail->getBilling('address'),
             "email" => $orderDetail->getBilling('email'),
         );
 
- 	    $res = self::curlPost('https://public.kiotapi.com/orders', $dataOrder);
-        Util::sendTele($res);
+        // echo $url; 
+        // echo 45; echo '<br>';
+        // echo json_encode($dataOrder); die;
+        
+ 	    $res = self::curlPost($url, $dataOrder, $optionsCurl);
+        Util::sendTele($idKiotviet . '__' . $res);
 
+        if (!empty($res)) {
+            $res = json_decode($res, true);
+            if (isset($res['id'])) {
+                $orderDetail->update_meta('kiotviet_id', (int)$res['id']);
+            }
+        }
 
         return true;
     }
 
     public static function curlPost($url, $post = array(), $options = array())
     {
-		$url = trim($url);
+		$token = self::checkToken();
+		if (empty($token )) {
+		    Util::sendTele('Token lỗi');
+		    return '';
+        }
+
+        $url = trim($url);
         if (is_array($post) && count($post)) {
-            $data = http_build_query($post);
+            $data = json_encode($post);
         } else {
             $data = $post;
         }
@@ -89,10 +166,13 @@ class Kiotviet
         $headers = [
             "Content-Type:application/json",
             "Retailer:" . self::RETAILER,
-            "Authorization:Bearer " . self::TOKEN
+            "Authorization:" . $token,
         ];
         curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
 
+        // echo $data; die;
+        // var_dump($headers);
+        // die;
 
         $defaults = array(
             CURLOPT_POST => true,
@@ -106,6 +186,12 @@ class Kiotviet
             CURLOPT_SSL_VERIFYPEER => false,
             CURLOPT_SSL_VERIFYHOST => false
         );
+
+        if (isset($options['custom_method']) && $options['custom_method'] == 'PUT') {
+            unset($defaults[CURLOPT_POST]);
+            $defaults[CURLOPT_CUSTOMREQUEST] = "PUT";
+        }
+        unset($options['custom_method']);
 
         
         curl_setopt_array($ch, ($options + $defaults));

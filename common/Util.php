@@ -50,6 +50,62 @@ class Util {
         }
     }
 
+    public static function curlPostJson($url, $post = array(), $timeout = 10)
+    {
+        $url = trim($url);
+        if (is_array($post) && count($post)) {
+            $data = json_encode($post);
+        } else {
+            $data = $post;
+        }
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'Content-Type: application/json',
+            'Content-Length: ' . strlen($data))
+        );
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
+    public static function curlPost($url, $post = array(), $options = array())
+    {
+        $url = trim($url);
+        if (is_array($post) && count($post)) {
+            $data = http_build_query($post);
+        } else {
+            $data = $post;
+        }
+
+        $defaults = array(
+            CURLOPT_POST => true,
+            CURLOPT_URL => $url,
+            CURLOPT_POSTFIELDS => $data,
+            CURLOPT_HEADER => false,
+            CURLOPT_TIMEOUT => 10,
+            CURLOPT_FORBID_REUSE => true,
+            CURLOPT_FRESH_CONNECT => true,
+            CURLOPT_RETURNTRANSFER => true,
+            CURLOPT_SSL_VERIFYPEER => false,
+            CURLOPT_SSL_VERIFYHOST => false
+        );
+
+        $ch = curl_init();
+        curl_setopt_array($ch, ($options + $defaults));
+
+        $result = curl_exec($ch);
+        curl_close($ch);
+
+        return $result;
+    }
+
     public static function curlGet($url, $get = array(), $options = array(), $timeout = 10)
     {
         $url = trim($url);

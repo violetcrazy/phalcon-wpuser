@@ -8,6 +8,7 @@ use Orders\Form\OrderForm;
 use Orders\Model\Orders;
 use Orders\Model\OrdersItem;
 use Phalcon\Exception;
+use Swift_Message;
 use User\HelperModel\UserHelper;
 use User\Model\User;
 use User\Model\UserMeta;
@@ -77,11 +78,13 @@ class SingleController extends BaseController
 
                     $orderDetail->addNote("{$userName} đã chuyển trạng thái từ {$statusOldLabel} ==> {$statusNewLabel}", Constant::ORDER_NOTE_TYPE_SYSTEM);
 
-                    \Plugins\Kiotviet::createOrder($orderDetail->order_id);
-
                 }
 
-                if ($orderDetail->status != Constant::ORDER_STATUS_DEFAULT) {
+                if ($statusNew != Constant::ORDER_STATUS_DEFAULT) {
+                    \Plugins\Kiotviet::createOrder($orderDetail->order_id);
+                }
+
+               if ($orderDetail->status != Constant::ORDER_STATUS_DEFAULT) {
                     $orderDetail->update();
                     $this->flashSession->warning('<b>Đơn hàng chỉ được phép chỉnh sửa trạng thái.</b>');
                     $this->response->redirect(array(
@@ -205,6 +208,38 @@ class SingleController extends BaseController
         ));
 
         $this->view->pick('orders/edit');
+    }
+
+    private function sendEmailNewOrder($orderDetail)
+    {
+        $this->view->orderDetail = $orderDetail;
+
+        $this->view->start();
+        $this->view->render('email', 'order_for_customer');
+        $this->view->finish();
+
+        $content =  trim($this->view->getContent());
+
+//         $transport = new \Swift_SmtpTransport('oms.superhost.vn', 587);
+//         $transport->setUsername("info@dulichgiadinhviet.net");
+//         $transport->setPassword('giadinhviet123');
+//         $transport->setEncryption('tls');
+//
+//         $mailer = new \Swift_Mailer($transport);
+//
+//         $message = (new Swift_Message("Đơn hàng {$orderDetail.order_id}" ))
+//             ->setFrom(['info@dulichgiadinhviet.net' => 'NuHoangSale.com'])
+//             ->setTo(['researchwordpress@gmail.com'])
+//             ->setBody($content)
+//             ->setContentType('text/html')
+//         ;
+//
+//         $result = $mailer->send($message);
+        // var_dump($result); die;
+
+
+        return true;
+
     }
 
     private function validateOrder()
@@ -345,6 +380,9 @@ class SingleController extends BaseController
                     $this->flashSession->error($m->getMessage());
                 }
             } else {
+
+                $this->sendEmailNewOrder($order);
+
                 $this->response->redirect(array(
                     'for' => 'order_edit',
                     'id' => $order->order_id

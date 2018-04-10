@@ -4,6 +4,7 @@ namespace Common;
 
 class Constant {
     const ORDER_STATUS_DEFAULT = 'new_order';
+    const ORDER_STATUS_KIOTVIETTRANS = 'kiotviet';
     const ORDER_STATUS_COMPLETE = 'complete';
     const ORDER_STATUS_CANCEL = 'cancel';
     const ORDER_STATUS_PROCESSING = 'processing';
@@ -82,6 +83,11 @@ class Constant {
         $status = array(
             self::ORDER_STATUS_DEFAULT => array(
                 'label' => 'Đơn hàng mới',
+                'class' => 'm-badge m-badge--wide m-badge--danger',
+                'color' => 'danger'
+            ),
+            self::ORDER_STATUS_KIOTVIETTRANS => array(
+                'label' => 'Chuyển qua KiotVIET',
                 'class' => 'm-badge m-badge--wide m-badge--danger',
                 'color' => 'danger'
             ),

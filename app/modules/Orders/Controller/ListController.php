@@ -1,10 +1,25 @@
 <?php
+// $users = User::find();
+// foreach ($users as $u){
+//     $u->user_address = $u->getMeta('billing_address_1');
+//     $u->user_phone = $u->getPhone();
+//     if($u->update()) {
+//      echo 'Success <br>';
+//     } else {
+//      echo 'Error <br>';
+//     }
+// }
+// die;
+
 
 namespace Orders\Controller;
 
+use Common\Util;
 use Common\Constant;
 use Core\Controller\BaseController;
+use Core\Model\Options;
 use Orders\Model\OrdersTemp;
+use Plugins\Kiotviet;
 use User\Model\User;
 use Orders\Model\Orders;
 use Phalcon\Paginator\Adapter\QueryBuilder;
@@ -14,20 +29,20 @@ class ListController extends BaseController {
 
 
     public function indexAction()
-    {
-        
+    {   
 
-       // $users = User::find();
-       // foreach ($users as $u){
-       //     $u->user_address = $u->getMeta('billing_address_1');
-       //     $u->user_phone = $u->getPhone();
-       //     if($u->update()) {
-       //      echo 'Success <br>';
-       //     } else {
-       //      echo 'Error <br>';
-       //     }
-       // }
-       // die;
+        // if ($this->request->getQuery('token') == "kiotviet"){
+        //     $url = "https://id.kiotviet.vn/connect/token";
+        //     $post = array(
+        //         "scopes" => "PublicApi.Access",
+        //         "grant_type" => "client_credentials",
+        //         "client_id" => "34d33123-38d7-4ff4-8a0f-87242a829078",
+        //         "client_secret" => "42FC314F51D7958167E81A13240FCB7CBAC92CF0"
+        //     );
+
+        //     $res = Util::curlPost($url, $post);
+        //     parent::outputJSON($res);
+        // }
 
         $orderTemp = OrdersTemp::find();
         if($orderTemp) {

@@ -90,7 +90,12 @@ class BaseController extends Controller
     {
         $this->view->disable();
         $this->response->setContentType('application/json', 'UTF-8');
-        $this->response->setJsonContent($response);
+        if (!is_array($response)) {
+            $this->response->setContent($response);
+        } else {
+            $this->response->setJsonContent($response);    
+        }
+        
         $this->response->send();
         exit;
     }
